@@ -18,8 +18,8 @@ function Add-DeepdwnPlan {
     )
 
     begin {
-        $templatePath = "~\code\templates\deepdwn"
-        $plansPath = "~\notes\plans"
+        $templatePath = "~\awldrive\.config\templates\deepdwn"
+        $plansPath = "~\awldrive\docs\notes\plans"
         $date = Get-Date -format 'yyyy-MM-dd'
     }
     

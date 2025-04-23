@@ -13,7 +13,7 @@ function Get-RdexVersionName {
     )
 
     begin {
-        $dataPath = "~\data\gen"
+        $dataPath = "~\awldrive\data\gen"
         $planets = cat "$dataPath\minor-planets.txt"
         $colours = cat "$dataPath\ver-colours.txt"
         $used = cat "$dataPath\ver.txt"

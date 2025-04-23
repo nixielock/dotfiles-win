@@ -2,7 +2,7 @@
 # load the function globally when script is called
 
 function Get-WordList {
-    return (cat $scriptpath\data\1000-wordlist-academic.txt)
+    return (cat $pwsh_scriptpath\data\1000-wordlist-academic.txt)
 }
 
 function Get-AsciiSequence {

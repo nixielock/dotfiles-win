@@ -1,0 +1,17 @@
+.gitignore
+functions.old-20250423T133902
+Microsoft.PowerShell_profile.old-20250423T133902.ps1
+functions.old-20250423T134037
+Microsoft.PowerShell_profile.old-20250423T134037.ps1
+functions.old-20250423T134104
+Microsoft.PowerShell_profile.old-20250423T134104.ps1
+functions/Connect-OnPremExchange.ps1
+functions/Disconnect-OnPremExchange.ps1
+functions/Get-FormattedDistributionGroupProperties.ps1
+functions/Get-ParsedDistributionGroupMember.ps1
+functions/Get-ParsedDistributionGroupOwner.ps1
+functions/ps*.ps1
+functions/rs*.ps1
+functions/Create-RundeckInlineScript.ps1
+functions.old-20250423T144718
+Microsoft.PowerShell_profile.old-20250423T144718.ps1

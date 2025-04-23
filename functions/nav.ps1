@@ -2,7 +2,7 @@
 # go to the path specified in l.nav (local or home)
 # also display a comment if present
 
-sv NavFolder "C:\Users\$pwsh_username\.nav" -o ReadOnly
+sv NavFolder C:\Users\EZ004876\.nav -o ReadOnly
 
 function nav {
     [CmdletBinding()]
@@ -25,7 +25,7 @@ function nav {
                 }
                 $outList += [PSCustomObject]@{
                     Marker  = $_.Name -replace '\.nav$',''
-                    Path    = $c[0] -replace "C:\\Users\\$pwsh_username\\",'~\'
+                    Path    = $c[0] -replace 'C:\\Users\\EZ004876\\','~\'
                     Comment = $c[1]
                 }
             }

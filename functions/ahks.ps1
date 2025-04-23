@@ -11,6 +11,6 @@ function ahks {
 	)
     # function body
 	$entry = "::#$HotString`::$Replacement"
-    Add-Content -Path "~\code\ahk\quick-replacements.ahk" -Value $entry
+    Add-Content -Path "~\awldrive\.config\ahk\quick-replacements.ahk" -Value $entry
 	ro "|@s|added line to config: |@ white|$entry"
 }

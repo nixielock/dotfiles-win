@@ -1,19 +1,25 @@
-# load the function globally when script is called
-
-# Enter-NewFunction / nf
-# creates a new function, adds initial comments, and edits in ISE
-function Enter-NewFunction {
+# ---- nf
+# create a new function, add template, open in helix or ISE
+function nf {
     [CmdletBinding()]
-    [Alias('nf')]
     param (
         [parameter(Mandatory=$true, Position=0, ValueFromPipeline)]
         [string] $FunctionName
     )
 
-    $newFilePath = "$scriptpath\functions\$FunctionName.ps1"
+    # -- init
+    
+    # set filepath for new function
+    $newFilePath = "$pwsh_scriptpath\functions\$FunctionName.ps1"
 
-    New-Item -Path $newFilePath -ItemType File
-    Add-Content -Path $newFilePath -Value @"
+    # create .ps1 file for function
+    ni -path $newFilePath -ItemType File
+    
+    # -- template
+
+    # > add template to .ps1 file
+    ac -path $newFilePath -val `
+@"
 # $FunctionName
 # load the function globally when script is called
 
@@ -28,8 +34,10 @@ function $FunctionName {
         # function body
     }
 }
-"@ # " # (extra quote is just to fix helix's formatting)
+"@
+    # " # (extra quote is just to fix helix's formatting)
 
+    # -- open .ps1 file for editing
     if ($host.Name -eq 'Windows PowerShell ISE Host') {
         ise $newFilePath
     } else {
