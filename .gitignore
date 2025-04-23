@@ -1,4 +1,3 @@
-.gitignore
 functions.old-20250423T133902
 Microsoft.PowerShell_profile.old-20250423T133902.ps1
 functions.old-20250423T134037
@@ -17,3 +16,6 @@ functions.old-20250423T144718
 Microsoft.PowerShell_profile.old-20250423T144718.ps1
 functions.old-20250423T145303
 Microsoft.PowerShell_profile.old-20250423T145303.ps1
+functions/doc-functions.ps1
+functions.old-20250423T145825
+Microsoft.PowerShell_profile.old-20250423T145825.ps1
