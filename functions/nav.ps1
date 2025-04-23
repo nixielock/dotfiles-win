@@ -2,7 +2,7 @@
 # go to the path specified in l.nav (local or home)
 # also display a comment if present
 
-$pwsh_navFolder = $pwsh_home\.nav
+$pwsh_navFolder = "$pwsh_home\.nav"
 
 function nav {
     [CmdletBinding()]

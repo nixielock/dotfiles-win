@@ -20,6 +20,7 @@ $pwsh_username    = $pwsh_home -replace '.*\\', ''
 $pwsh_scriptpath  = "$pwsh_home\awldrive\powershell"
 $pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
+$pwsh_datapath    = "$pwsh_scriptpath\data"
 
 #endregion globals
 
@@ -63,9 +64,6 @@ $PSStyle.FileInfo.Directory = "`e[107;30m"
 # ---- FUNCTIONS ----
 #region functions
 
-# dot-source extended profile
-. $pwsh_scriptpath\AWL-ISE-profile-ext.ps1
-
 # dot-source functions
 ls $pwsh_scriptpath\functions\*.ps1 |
     % {
@@ -77,20 +75,14 @@ ls $pwsh_scriptpath\functions\*.ps1 |
         }
     }
 
-# dot-source cosmetic function
-. $pwsh_scriptpath\cosmetics\change-color.ps1
-
 #endregion
 
 # ---- EXTERNALS ----
 #region externals
 
 #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
-Import-Module -Name Microsoft.WinGet.CommandNotFound
+Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
 #f45873b3-b655-43a6-b217-97c00aa0db58
-
-# broot
-. $pwsh_home\AppData\Roaming\dystroy\broot\config\launcher\powershell\br.ps1
 
 #endregion
 
@@ -186,10 +178,12 @@ function Prompt {
 }
 
 # change title
-
-$iterationCount = [int](Get-Content -path $pwsh_scriptpath\iteration-counter.txt -totalcount 1)
+if ((ls $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
+    ni $pwsh_datapath\iteration-counter.txt -val '0'
+}
+$iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
 $iterationCount++
-Out-File -filepath $pwsh_scriptpath\iteration-counter.txt -inputobject $iterationCount
+Out-File -filepath $pwsh_datapath\iteration-counter.txt -inputobject $iterationCount
 
 $host.ui.RawUI.WindowTitle = “spellbook open | pg. $(cndz $iterationCount)z”
 
