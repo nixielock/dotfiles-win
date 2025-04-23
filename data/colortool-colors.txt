@@ -1,0 +1,375 @@
+0x96f
+3024 Day
+3024 Night
+Aardvark Blue
+Abernathy
+Adventure
+AdventureTime
+Adwaita Dark
+Adwaita
+Afterglow
+Alabaster
+AlienBlood
+Andromeda
+Apple Classic
+Apple System Colors
+arcoiris
+Argonaut
+Arthur
+AtelierSulphurpool
+Atom
+AtomOneLight
+Aura
+Aurora
+Ayu Mirage
+ayu
+ayu_light
+Banana Blueberry
+Batman
+Belafonte Day
+Belafonte Night
+BirdsOfParadise
+Blazer
+Blue Matrix
+BlueBerryPie
+BlueDolphin
+BlulocoDark
+BlulocoLight
+Borland
+Breeze
+Bright Lights
+Broadcast
+Brogrammer
+Builtin Dark
+Builtin Light
+Builtin Pastel Dark
+Builtin Solarized Dark
+Builtin Solarized Light
+Builtin Tango Dark
+Builtin Tango Light
+C64
+Calamity
+campbell-legacy
+campbell
+catppuccin-frappe
+catppuccin-latte
+catppuccin-macchiato
+catppuccin-mocha
+CGA
+Chalk
+Chalkboard
+ChallengerDeep
+Chester
+Ciapre
+CLRS
+cmd-legacy
+Cobalt Neon
+Cobalt2
+coffee_theme
+CrayonPonyFish
+CutiePro
+Cyberdyne
+cyberpunk
+CyberpunkScarletProtocol
+Dark Modern
+Dark Pastel
+Dark+
+darkermatrix
+darkmatrix
+Darkside
+dayfox
+deep
+Desert
+detuned
+deuteranopia
+Dimidium
+DimmedMonokai
+Django
+DjangoRebornAgain
+DjangoSmooth
+Doom Peacock
+DoomOne
+DotGov
+Dracula+
+Dracula
+duckbones
+Duotone Dark
+Earthsong
+electron-highlighter
+Elemental
+Elementary
+embers-dark
+ENCOM
+Espresso Libre
+Espresso
+Everblush
+Everforest Dark - Hard
+Fahrenheit
+Fairyfloss
+farmhouse-dark
+farmhouse-light
+Fideloper
+Firefly Traditional
+FirefoxDev
+Firewatch
+FishTank
+Flat
+Flatland
+flexoki-dark
+flexoki-light
+Floraverse
+ForestBlue
+Framer
+FrontEndDelight
+FunForrest
+Galaxy
+Galizur
+GitHub Dark
+Github
+Glacier
+Grape
+Grass
+Grey-green
+gruber-darker
+gruvbox-material
+GruvboxDark
+GruvboxDarkHard
+GruvboxLight
+GruvboxLightHard
+Guezwhoz
+Hacktober
+Hardcore
+Harper
+Havn Daggry
+Havn Skumring
+HaX0R_BLUE
+HaX0R_GR33N
+HaX0R_R3D
+heeler
+Highway
+Hipster Green
+Hivacruz
+Homebrew
+Hopscotch.256
+Hopscotch
+Horizon
+Hurtado
+Hybrid
+iceberg-dark
+iceberg-light
+IC_Green_PPL
+IC_Orange_PPL
+idea
+idleToes
+IR_Black
+iTerm2 Dark Background
+iTerm2 Default
+iTerm2 Light Background
+iTerm2 Pastel Dark Background
+iTerm2 Smoooooth
+iTerm2 Solarized Dark
+iTerm2 Solarized Light
+iTerm2 Tango Dark
+iTerm2 Tango Light
+Jackie Brown
+Japanesque
+Jellybeans
+JetBrains Darcula
+jubi
+Kanagawa Dragon
+Kanagawa Wave
+kanagawabones
+Kibble
+Kolorit
+Konsolas
+kurokula
+Lab Fox
+Laser
+Later This Evening
+Lavandula
+LiquidCarbon
+LiquidCarbonTransparent
+LiquidCarbonTransparentInverse
+lovelace
+Man Page
+Mariana
+Material
+MaterialDark
+MaterialDarker
+MaterialDesignColors
+MaterialOcean
+Mathias
+matrix
+Medallion
+Melange_dark
+Melange_light
+Mellifluous
+mellow
+miasma
+midnight-in-mojave
+Mirage
+Misterioso
+Molokai
+MonaLisa
+Monokai Classic
+Monokai Pro Light Sun
+Monokai Pro Light
+Monokai Pro Machine
+Monokai Pro Octagon
+Monokai Pro Ristretto
+Monokai Pro Spectrum
+Monokai Pro
+Monokai Remastered
+Monokai Soda
+Monokai Vivid
+N0tch2k
+neobones_dark
+neobones_light
+Neon
+Neopolitan
+Neutron
+Night Owlish Light
+nightfox
+NightLion v1
+NightLion v2
+niji
+Nocturnal Winter
+nord-light
+nord
+Novel
+NvimDark
+NvimLight
+Obsidian
+Ocean
+Oceanic-Next
+OceanicMaterial
+Ollie
+OneHalfDark
+OneHalfLight
+Operator Mono Dark
+Overnight Slumber
+Oxocarbon
+PaleNightHC
+Pandora
+Paraiso Dark
+PaulMillr
+PencilDark
+PencilLight
+Peppermint
+Piatto Light
+Pnevma
+Popping and Locking
+primary
+Pro Light
+Pro
+Purple Rain
+purplepeter
+Rapture
+Raycast_Dark
+Raycast_Light
+rebecca
+Red Alert
+Red Planet
+Red Sands
+Relaxed
+Retro
+RetroLegends
+Rippedcasts
+rose-pine-dawn
+rose-pine-moon
+rose-pine
+Rouge 2
+Royal
+Ryuuko
+Sakura
+Scarlet Protocol
+Seafoam Pastel
+SeaShells
+seoulbones_dark
+seoulbones_light
+Seti
+shades-of-purple
+Shaman
+Slate
+SleepyHollow
+Smyck
+Snazzy Soft
+Snazzy
+SoftServer
+Solarized Darcula
+Solarized Dark - Patched
+Solarized Dark Higher Contrast
+solarized_dark
+solarized_light
+Spacedust
+SpaceGray Bright
+SpaceGray Eighties Dull
+SpaceGray Eighties
+SpaceGray
+Spiderman
+Spring
+Square
+Squirrelsong Dark
+starlight
+Sublette
+Subliminal
+Sugarplum
+Sundried
+Symfonic
+synthwave-everything
+synthwave
+SynthwaveAlpha
+Tango Adapted
+Tango Half Adapted
+Teerb
+terafox
+Terminal Basic
+Thayer Bright
+The Hulk
+Tinacious Design (Dark)
+Tinacious Design (Light)
+tokyonight-day
+tokyonight-storm
+tokyonight
+tokyonight_moon
+tokyonight_night
+Tomorrow Night Blue
+Tomorrow Night Bright
+Tomorrow Night Burns
+Tomorrow Night Eighties
+Tomorrow Night
+Tomorrow
+ToyChest
+Treehouse
+Twilight
+Ubuntu
+UltraDark
+UltraViolent
+UnderTheSea
+Unikitty
+Urple
+Vaughn
+Vesper
+VibrantInk
+vimbones
+Violet Dark
+Violet Light
+WarmNeon
+Wez
+Whimsy
+WildCherry
+wilmersdorf
+Wombat
+Wryan
+xcodedark
+xcodedarkhc
+xcodelight
+xcodelighthc
+xcodewwdc
+zenbones
+zenbones_dark
+zenbones_light
+Zenburn
+zenburned
+zenwritten_dark
+zenwritten_light

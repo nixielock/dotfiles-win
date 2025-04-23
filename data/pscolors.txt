@@ -1,0 +1,16 @@
+black
+red
+green
+yellow
+blue
+magenta
+cyan
+gray
+darkgray
+darkred
+darkgreen
+darkyellow
+darkblue
+darkmagenta
+darkcyan
+white
