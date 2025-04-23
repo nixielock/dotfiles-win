@@ -157,7 +157,7 @@ function Prompt {
 
         $reponame = switch ($repodir -eq '.git') {
             $true { ($parsedPath.Split('\'))[-1] }
-            $false { $repodir.Replace('.*/([^/]+)/\.git','$1') }
+            $false { $repodir -replace ('.*/([^/]+)/\.git','$1') }
         }
         
         wr " | " -f cyan -n

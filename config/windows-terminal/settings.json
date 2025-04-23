@@ -1,0 +1,215 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": 
+    [
+        {
+            "command": 
+            {
+                "action": "copy",
+                "singleLine": false
+            },
+            "id": "User.copy.644BA8F2"
+        },
+        {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "auto",
+                "splitMode": "duplicate"
+            },
+            "id": "User.splitPane.A6751878"
+        },
+        {
+            "command": "find",
+            "id": "User.find"
+        },
+        {
+            "command": "paste",
+            "id": "User.paste"
+        },
+        {
+            "command": 
+            {
+                "action": "globalSummon"
+            },
+            "id": "User.globalSummon"
+        }
+    ],
+    "alwaysShowNotificationIcon": true,
+    "centerOnLaunch": true,
+    "compatibility.allowHeadless": true,
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "initialCols": 140,
+    "initialRows": 40,
+    "keybindings": 
+    [
+        {
+            "id": null,
+            "keys": "shift+insert"
+        },
+        {
+            "id": null,
+            "keys": "alt+enter"
+        },
+        {
+            "id": "User.paste",
+            "keys": "ctrl+shift+v"
+        },
+        {
+            "id": "User.copy.644BA8F2",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "User.find",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": "User.globalSummon",
+            "keys": "win+alt+v"
+        },
+        {
+            "id": "User.splitPane.A6751878",
+            "keys": "alt+shift+d"
+        }
+    ],
+    "minimizeToNotificationArea": true,
+    "newTabMenu": 
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": 
+    {
+        "defaults": 
+        {
+            "bellStyle": "window"
+        },
+        "list": 
+        [
+            {
+                "antialiasingMode": "cleartype",
+                "bellStyle": "none",
+                "colorScheme": "Kanagawa Wave Muted",
+                "commandline": "\"C:\\Program Files\\PowerShell\\7\\pwsh.exe\" -nologo",
+                "experimental.rightClickContextMenu": true,
+                "font": 
+                {
+                    "axes": {},
+                    "face": "Fira Code, Symbols Nerd Font",
+                    "features": 
+                    {
+                        "TXTR": 5
+                    },
+                    "size": 10,
+                    "weight": "medium"
+                },
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "intenseTextStyle": "bold",
+                "name": "PowerShell",
+                "opacity": 100,
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "antialiasingMode": "cleartype",
+                "bellStyle": "window",
+                "colorScheme": "Later This Evening Redux",
+                "font": 
+                {
+                    "cellHeight": "1.2",
+                    "face": "Fira Code, Symbols Nerd Font",
+                    "features": 
+                    {
+                        "TXTR": 1
+                    },
+                    "size": 10,
+                    "weight": "medium"
+                },
+                "guid": "{a5a97cb8-8961-5535-816d-772efe0c6a3f}",
+                "hidden": false,
+                "name": "Arch",
+                "opacity": 90,
+                "source": "Windows.Terminal.Wsl",
+                "useAcrylic": false
+            },
+            {
+                "bellStyle": "none",
+                "colorScheme": "Campbell Powershell",
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "font": 
+                {
+                    "face": "Fira Code",
+                    "size": 10,
+                    "weight": "medium"
+                },
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
+            }
+        ]
+    },
+    "schemes": 
+    [
+        {
+            "background": "#1F1F28",
+            "black": "#090618",
+            "blue": "#5571A9",
+            "brightBlack": "#5B5A52",
+            "brightBlue": "#7FB4CA",
+            "brightCyan": "#7AA89F",
+            "brightGreen": "#98BB6C",
+            "brightPurple": "#938AA9",
+            "brightRed": "#E82424",
+            "brightWhite": "#DCD7BA",
+            "brightYellow": "#E6C384",
+            "cursorColor": "#C8C093",
+            "cyan": "#517B70",
+            "foreground": "#ADA685",
+            "green": "#76946A",
+            "name": "Kanagawa Wave Muted",
+            "purple": "#7B659C",
+            "red": "#C34043",
+            "selectionBackground": "#2D4F67",
+            "white": "#C0B997",
+            "yellow": "#C0A36E"
+        },
+        {
+            "background": "#161616",
+            "black": "#2B2B2B",
+            "blue": "#A0BAD6",
+            "brightBlack": "#454747",
+            "brightBlue": "#6699D6",
+            "brightCyan": "#5FC0AE",
+            "brightGreen": "#AABB39",
+            "brightPurple": "#AB53D6",
+            "brightRed": "#D3232F",
+            "brightWhite": "#C1C2C2",
+            "brightYellow": "#E5BE39",
+            "cursorColor": "#424242",
+            "cyan": "#91BFB7",
+            "foreground": "#959595",
+            "green": "#AFBA67",
+            "name": "Later This Evening Redux",
+            "purple": "#C092D6",
+            "red": "#D45A60",
+            "selectionBackground": "#424242",
+            "white": "#3C3D3D",
+            "yellow": "#E5D289"
+        }
+    ],
+    "startOnUserLogin": true,
+    "tabSwitcherMode": "disabled",
+    "tabWidthMode": "equal",
+    "themes": [],
+    "windowingBehavior": "useAnyExisting"
+}
