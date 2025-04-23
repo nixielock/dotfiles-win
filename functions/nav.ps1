@@ -2,7 +2,7 @@
 # go to the path specified in l.nav (local or home)
 # also display a comment if present
 
-sv NavFolder C:\Users\EZ004876\.nav -o ReadOnly
+$pwsh_navFolder = $pwsh_home\.nav
 
 function nav {
     [CmdletBinding()]
@@ -16,8 +16,8 @@ function nav {
 
     if ($List) {
         $outList = @()
-        (ls -path $NavFolder) |
-            ? { $_.Name -match "\.nav$" } |
+        (ls -path $pwsh_navFolder) |
+            ? { $_.Extension -eq ".nav" } |
             % {
                 $c = (cat $_.FullName -to 2)
                 if ($c.Count -eq 1) {
@@ -25,7 +25,7 @@ function nav {
                 }
                 $outList += [PSCustomObject]@{
                     Marker  = $_.Name -replace '\.nav$',''
-                    Path    = $c[0] -replace 'C:\\Users\\EZ004876\\','~\'
+                    Path    = "$($c[0])".Replace("$pwsh_home\",'~\')
                     Comment = $c[1]
                 }
             }
@@ -33,7 +33,7 @@ function nav {
         return
     }
 
-    $navPath = "$NavFolder\$Marker.nav"
+    $navPath = "$pwsh_navFolder\$Marker.nav"
     $mText = " $Marker"
 
     try {
@@ -61,7 +61,7 @@ function setnav {
         [string] $Comment
     )
 
-    $navPath = "$NavFolder\$Marker.nav"
+    $navPath = "$pwsh_navFolder\$Marker.nav"
 
     try {
         if (!(Test-Path $navPath)) {

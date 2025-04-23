@@ -15,3 +15,5 @@ functions/rs*.ps1
 functions/Create-RundeckInlineScript.ps1
 functions.old-20250423T144718
 Microsoft.PowerShell_profile.old-20250423T144718.ps1
+functions.old-20250423T145303
+Microsoft.PowerShell_profile.old-20250423T145303.ps1
