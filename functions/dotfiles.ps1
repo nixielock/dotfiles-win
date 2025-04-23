@@ -23,13 +23,13 @@ function dotfiles {
     ac .\.gitignore -val $oldFunctionDir
 
     # rename and gitignore existing profile
-    $oldProfile = "Microsoft.PowerShell_profile.old-$dt.ps1"
-    rni .\Microsoft.PowerShell_profile.ps1 $oldProfile
+    $oldProfile = "load.old-$dt.ps1"
+    rni .\load.ps1 $oldProfile
     ac .\.gitignore -val $oldProfile
 
     # import current functions directory and profile
     cp -Recurse $FunctionsPath .\functions
-    cp $profile .
+    cp $profile .\load.ps1
 
     # add changes and display git status
     git add .

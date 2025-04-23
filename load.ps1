@@ -2,6 +2,7 @@
 
 # measure profile build time
 $profileTimer = [System.Diagnostics.Stopwatch]::StartNew()
+$profileNoClear = $false
 
 # ---- GLOBALS ----
 #region globals
@@ -13,19 +14,26 @@ sal 'npp' 'C:\Program Files\Notepad++\notepad++.exe'
 sal 'no' Out-Null
 sal 'str' Out-String
 
+wr "initialising... " -f darkgray -n
+
 # globals
 $pwsh_home        = (gi "~").FullName
 $pwsh_homeEsc     = $pwsh_home -replace '\\', '\\'
 $pwsh_username    = $pwsh_home -replace '.*\\', ''
-$pwsh_scriptpath  = "$pwsh_home\awldrive\powershell"
+$pwsh_mainPath    = "$pwsh_home\awldrive\powershell"
 $pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
-$pwsh_datapath    = "$pwsh_scriptpath\data"
+$pwsh_datapath    = "$pwsh_mainPath\data"
+
+wr "set -> " -f gray -n
+wr "$($pwsh_mainPath.Replace($pwsh_home,'~'))" -f white
 
 #endregion globals
 
 # ---- SETUP ----
 #region setup
+
+wr "- configuring PSReadLine... " -f gray -n
 
 # configure vi keys
 $pwsh_viModeSection = 'I'
@@ -59,19 +67,27 @@ Set-PSReadlineOption @setPSReadLineOptionParams
 # set directory formatting
 $PSStyle.FileInfo.Directory = "`e[107;30m"
 
+wr "done" -f green
+
 #endregion setup
 
 # ---- FUNCTIONS ----
 #region functions
 
+wr "- loading functions... " -f gray
+
 # dot-source functions
-ls $pwsh_scriptpath\functions\*.ps1 |
+ls $pwsh_mainPath\functions\*.ps1 |
     % {
         $name = $_.Name
+        wr "  - $name -> " -f darkgray -n
         try {
             . $_.FullName
+            wr "loaded" -f green
         } catch {
-            wr "failed to load $name - issue on line $($_.InvocationInfo.ScriptLineNumber)" -f red
+            $errLine = $_.InvocationInfo.ScriptLineNumber
+            wr "failed - issue on line $errLine" -f red
+            $profileNoClear = $true
         }
     }
 
@@ -80,14 +96,22 @@ ls $pwsh_scriptpath\functions\*.ps1 |
 # ---- EXTERNALS ----
 #region externals
 
+wr "- loading externals... " -f gray -n
+
 #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
 Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
 #f45873b3-b655-43a6-b217-97c00aa0db58
+
+wr "done" -f green
 
 #endregion
 
 # ---- CUSTOMISATIONS ----
 #region customisations
+
+wr "- loading customisations... " -f gray
+
+wr "  - prompt -> " -f darkgray -n
 
 # set variables for prompt
 $pwsh_previousPath = ""
@@ -142,8 +166,8 @@ function Prompt {
     } else {
         $parsedPath = $pwsh_previousPath.Replace("$pwsh_home","~")
 
-        # show in dark cyan if the path is the $pwsh_scriptpath
-        if ($pwsh_previousPath -like "$pwsh_scriptpath*") {
+        # show in dark cyan if the path is the $pwsh_mainPath
+        if ($pwsh_previousPath -like "$pwsh_mainPath*") {
             wr "$(@($parsedPath.Split('\'))[-1])" -f darkcyan -n
 
         } else {
@@ -177,15 +201,19 @@ function Prompt {
     return " "
 }
 
+wr "  - ui -> " -f darkgray -n
+
 # change title
 if ((ls $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
     ni $pwsh_datapath\iteration-counter.txt -val '0'
 }
 $iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
 $iterationCount++
-Out-File -filepath $pwsh_datapath\iteration-counter.txt -inputobject $iterationCount
+Out-File -filepath "$pwsh_datapath\iteration-counter.txt" -inputobject $iterationCount
 
-$host.ui.RawUI.WindowTitle = “spellbook open | pg. $(cndz $iterationCount)z”
+$host.ui.RawUI.WindowTitle = "spellbook open | pg. $(cndz $iterationCount)z"
+
+wr "done" -f green
 
 #endregion
 
@@ -194,8 +222,12 @@ $host.ui.RawUI.WindowTitle = “spellbook open | pg. $(cndz $iterationCount)z”
 # stop timer
 $profileTimer.Stop()
 
+if (!$profileNoClear) {
+    clear
+}
+
 # display greeting
 pwsh-greeting $profileTimer.Elapsed.TotalSeconds
 
 # cleanup profile variables
-rv profileTimer, iterationCount
+rv profileTimer, iterationCount, profileNoClear
