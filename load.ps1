@@ -132,6 +132,7 @@ $profileTimer.Stop()
 
 if (!$profileNoClear) {
     clear
+} else {
     wr ""
 }
 
