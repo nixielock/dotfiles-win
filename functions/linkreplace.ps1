@@ -82,7 +82,7 @@ function linkreplace {
 
         wr "done" -f green
 
-        ro "cloning $($isDirectory ? 'file' : 'directory') to |@white|$newPath|@|... " -n
+        ro "cloning $($isDirectory ? 'directory' : 'file') to |@white|$newPath|@|... " -n
         cp $pathItem $newPath -r:$isDirectory -ea Stop
         wr "done" -f green
 
