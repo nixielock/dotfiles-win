@@ -6,6 +6,9 @@ function pwsh-greeting {
         [parameter(Position = 0, ValueFromPipeline)]
         [float] $Elapsed = 0.0,
 
+        [Alias('up')]
+        [switch] $ShiftCursor,
+
         [Alias('nf')]
         [switch] $NoFetch,
 
@@ -16,8 +19,10 @@ function pwsh-greeting {
     # get console centre
     $consoleCentre = $Host.UI.RawUI.BufferSize.Width / 2
     
-    # push cursor back up to top of screen
-    wr "$pwsh_esc[1F" -n
+    if ($ShiftCursor) {
+        # push cursor back up to top of screen
+        wr "$pwsh_esc[1F" -n
+    }
     
     # output header
     if ($Refresh) {
