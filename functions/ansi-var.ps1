@@ -2,6 +2,9 @@ function ansi {
     [CmdletBinding()]
     param ()
 
+    # ! TODO: fix this whole thing lmao
+    throw [System.NotImplementedException]::new()
+
     $esc = [char]0x1b
     $seq = [System.Collections.Generic.List[string]]::new()
     $seq += "$esc["

@@ -1,8 +1,8 @@
 ﻿# dozenal.ps1
 # contains various functions for conversion between base-10 and base-12 numbers, as well as a time and a date function
 # uses the suffix d for decimal and z for dozenal
-# uses X for 10d and H for 11d by default, but accepts other sets in $GlyphRecognitionSets
-# you can change the output glyphs for 10d and 11d in $DozenalGlyphs too!
+# uses X for 10d and H for 11d by default, but accepts other sets in $pwsh_dzGlyphSets
+# you can change the output glyphs for 10d and 11d in $pwsh_dzGlyphs too!
 
 function Get-QuotientAndRemainder {
     [CmdletBinding()]
@@ -23,7 +23,7 @@ function Get-QuotientAndRemainder {
     }
 }
 
-$DozenalGlyphs = @{
+$pwsh_dzGlyphs = @{
     0 = '0'
     1 = '1'
     2 = '2'
@@ -38,7 +38,7 @@ $DozenalGlyphs = @{
     11 = 'H'
 }
 
-$GlyphRecognitionSets = @(
+$pwsh_dzGlyphSets = @(
     @{  10 = 'A'
         11 = 'B' },
 
@@ -85,7 +85,7 @@ function Convert-DecimalToDozenal {
 
             # iterate backwards through $valueInts
             for ($i = $valueInts.Length - 1; $i -ge 0; $i--) {
-                $glyphs += $DozenalGlyphs[[Math]::Abs($valueInts[$i])]
+                $glyphs += $pwsh_dzGlyphs[[Math]::Abs($valueInts[$i])]
             }
 
             if ($negative) { $glyphs = "-$glyphs" }
@@ -114,7 +114,7 @@ function Convert-DozenalToDecimal {
             $negative = $true
         }
 
-        foreach ($set in $GlyphRecognitionSets) {
+        foreach ($set in $pwsh_dzGlyphSets) {
             $setRegex = "^[0-9$($set[10], $set[11] -join '')]+$"
 
             if (-not ($zParsed -notmatch $setRegex)) {
