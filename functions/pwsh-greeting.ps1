@@ -6,18 +6,18 @@ function pwsh-greeting {
         [parameter(Position = 0, ValueFromPipeline)]
         [float] $Elapsed = 0.0,
 
-        [Alias('up')]
+        [Alias('c')]
+        [switch] $Center,
+
+        [Alias('u')]
         [switch] $ShiftCursor,
 
-        [Alias('nf')]
-        [switch] $NoFetch,
+        [Alias('f')]
+        [switch] $Fetch,
 
-        [Alias('cr')]
+        [Alias('cr','r')]
         [switch] $Refresh
     )
-
-    # get console centre
-    $consoleCentre = $Host.UI.RawUI.BufferSize.Width / 2
     
     if ($ShiftCursor) {
         # push cursor back up to top of screen
@@ -30,13 +30,19 @@ function pwsh-greeting {
     } else {
         $msg = "✨ spellbook opened - ritual performed in |@b|$([math]::Round($Elapsed,3)) |@|seconds ✨"
     }
+
+    if ($Center) {
+        # get console centre
+        $consoleCentre = $Host.UI.RawUI.BufferSize.Width / 2
+        $msgLength = ($msg -replace $pwsh_roFormatTag,'').Length
+        $padding = ''.PadLeft($consoleCentre - [int]($msgLength / 2))
+        wr "$padding" -n
+    }    
     
-    $msgLength = ($msg -replace $pwsh_roFormatTag,'').Length
-    $padding = ''.PadLeft($consoleCentre - [int]($msgLength / 2))
-    ro "$padding$msg"
+    ro "$msg"
     
     # display fetch
-    if (-not $NoFetch) {
+    if ($NoFetch) {
         hyfetch --distro "Windows 7" -p lesbian
     }
 }

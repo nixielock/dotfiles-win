@@ -1,4 +1,4 @@
 function cr {
     clear
-    pwsh-greeting -cr
+    pwsh-greeting -f -r -c
 }
