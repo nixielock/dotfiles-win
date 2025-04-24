@@ -161,7 +161,7 @@ function zl {
             wr "$($c.Icon ?? "  ")" -f $c.Color -n
             wr " $($Item.Name)" -f $c.Color -n
             if ($Item.Target) {
-                wr " -> " -f gray -n
+                wr " -> " -f cyan -n
                 wr "$($Item.Target.Replace($pwsh_home,'~'))" -f white -n
             }
             wr ""

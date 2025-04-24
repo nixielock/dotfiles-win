@@ -52,7 +52,7 @@ function update-file {
         
         # files are identical, skip
         if ((Get-FileHash $fileObject).Hash -eq (Get-FileHash $targetObject).Hash) {
-            wr "no change"
+            wr "no change" -f darkgray
             return ($ReturnStatus ? 'skipped' : $null)
         }
         

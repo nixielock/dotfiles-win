@@ -7,11 +7,17 @@ function linkreplace {
     param (
         # name to give the new symlink in the register
         [parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Alias('n')]
         [string] $Name,
         
         # path to the existing file/directory to be symlink-ified
         [parameter(Position = 1, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [string] $Path
+        [Alias('p')]
+        [string] $Path,
+
+        # use parent directory for a junction
+        [Alias('f')]
+        [switch] $ForceParentDirectory
     )
 
     begin {
@@ -19,12 +25,13 @@ function linkreplace {
             throw "making symlinks requires admin!"
         }
 
-        wr "initialising register..."
+        wr "initialising register... " -n
         $register = [System.Collections.Generic.List[PSCustomObject]]::new()
+        wr "done" -f green
+        wr ""
     }
     
     process {
-        wr ""
         ro "linking |@cyan|$Name!"
         ro "fetching |@white|$Path|@|... " -n
         $pathItem = (gi $Path -ea Stop)
@@ -32,18 +39,19 @@ function linkreplace {
 
         wr "checking link directory... " -n
         $isDirectory = $pathItem.PSIsContainer
-        $newPath = switch ($isDirectory) {
+        $useParent = ($isDirectory -or $ForceParentDirectory)
+        $newPath = switch ($useParent) {
             $true { "$pwsh_linkDir\$($pathItem.Name)" }
             $false { "$pwsh_linkDir\$Name\$($pathItem.Name)" }
         }
 
-        if (!$isDirectory) {
+        if (!$useParent) {
             $existingDir = (gi "$pwsh_linkDir\$Name" -ea SilentlyContinue)
             if ($null -ne $existingDir) {
                 if (-not ($existingDir.PSIsContainer)) {
                     wr ""
                     throw [System.ArgumentException]::new(
-                        "$Name is an existing file - please choose a different name for the link directory.",
+                        "$Name is an existing file - please choose a different name for the parent directory.",
                         "Name"
                     )
                 }
@@ -83,7 +91,7 @@ function linkreplace {
         rni $pathItem $sourceRename -ea Stop
         wr "done" -f green
 
-        ro "creating $($isDirectory ? 'junction' : 'symlink') at |@white|$($pathItem.FullName)|@|... " -n
+        ro "creating $($isDirectory ? 'junction' : 'symlink') at |@white|$($pathItem.FullName.Replace($pwsh_home,'~'))|@|... " -n
         $newItemParams = @{
             ItemType = ($isDirectory ? 'Junction' : 'SymbolicLink')
             Path = $pathItem.FullName
@@ -92,7 +100,7 @@ function linkreplace {
         }
         $newLink = ni @newItemParams
         wr "done" -f green
-        ro "$($newLink.Name) |@cyan|-> |@white|$($newLink.Target)"
+        ro "$($newLink.Name) |@cyan|-> |@white|$($newLink.Target.Replace($pwsh_home,'~'))"
 
         ro "registering $($isDirectory ? 'junction' : 'symlink')... " -n
         $register += [PSCustomObject]@{
@@ -102,11 +110,14 @@ function linkreplace {
             IsDirectory = $IsDirectory
         }
         wr "done" -f green
+        wr ""
     }
 
     end {
         ro "updating |@white|$pwsh_linkDir\register.csv|@|... " -n
         $register | Export-Csv "$pwsh_linkDir\register.csv" -Append
         wr "done" -f green
+        wr "linking complete!" -f green
+        wr ""
     }
 }
