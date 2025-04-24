@@ -42,7 +42,7 @@ function pwsh-greeting {
     ro "$msg"
     
     # display fetch
-    if ($NoFetch) {
+    if ($Fetch) {
         hyfetch --distro "Windows 7" -p lesbian
     }
 }
