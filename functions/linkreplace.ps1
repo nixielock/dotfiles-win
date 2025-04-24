@@ -39,7 +39,7 @@ function linkreplace {
 
         wr "checking link directory... " -n
         $isDirectory = $pathItem.PSIsContainer
-        $useParent = ($isDirectory -or $ForceParentDirectory)
+        $useParent = ((-not $isDirectory) -or $ForceParentDirectory)
         $newPath = switch ($useParent) {
             $true { "$pwsh_linkDir\$($pathItem.Name)" }
             $false { "$pwsh_linkDir\$Name\$($pathItem.Name)" }
