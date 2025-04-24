@@ -130,6 +130,7 @@ function zl {
         $itemList += [PSCustomObject]@{
             Name     = $name
             Category = $ctype
+            Target   = $item.Target
         }
     }
 
@@ -140,6 +141,7 @@ function zl {
             $itemList += [PSCustomObject]@{
                 Name     = $item.Name
                 Category = $firstLetter + (($item.PSIsContainer) ? 'dir' : 'file')
+                Target   = $item.Target
             }
         }
     }
@@ -157,7 +159,12 @@ function zl {
         process {
             $c = $pwsh_zlCategories |? Name -eq $Item.Category
             wr "$($c.Icon ?? "  ")" -f $c.Color -n
-            wr " $($Item.Name)" -f $c.Color
+            wr " $($Item.Name)" -f $c.Color -n
+            if ($Item.Target) {
+                wr " -> " -f gray -n
+                wr "$($Item.Target.Replace($pwsh_home,'~'))" -f white -n
+            }
+            wr ""
         }
     }
     
