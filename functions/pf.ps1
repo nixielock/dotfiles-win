@@ -1,2 +1,2 @@
 # ---- pf - open profile
-function pf { hx $PROFILE }
+function pf { hx "$pwsh_mainpath\load.ps1" }

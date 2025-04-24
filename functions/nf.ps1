@@ -29,7 +29,7 @@ function nf {
     }
     
     # set filepath for new function
-    $newFilePath = "$pwsh_scriptpath\functions\$Name.ps1"
+    $newFilePath = "$pwsh_mainPath\functions\$Name.ps1"
 
     # create .ps1 file for function
     ni -path $newFilePath -ItemType File
