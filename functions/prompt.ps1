@@ -1,4 +1,4 @@
-# ---- prompt - <description>
+# ---- prompt - replace the default powershell prompt!
 
 # set variables for prompt
 $pwsh_previousPath = ""
