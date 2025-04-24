@@ -1,14 +1,19 @@
-# ---- nf
-# create a new function, add template, open in helix or ISE
+# ---- nf - create a new function from template and open for editing
+
 function nf {
     [CmdletBinding()]
     param (
         # function name
-        [parameter(Position=0, Mandatory, ValueFromPipeline)]
+        [parameter(Position = 0, Mandatory, ValueFromPipeline)]
         [string] $Name,
 
+        # function name
+        [parameter(Position = 1)]
+        [Alias('d')]
+        [string] $Directory = $null,
+
         # number of parameters
-        [parameter(Position = 1, ValueFromPipeline)]
+        [parameter()]
         [Alias('p','params')]
         [int] $ParameterCount = -1,
 
@@ -29,7 +34,7 @@ function nf {
     }
     
     # set filepath for new function
-    $newFilePath = "$pwsh_mainPath\functions\$Name.ps1"
+    $newFilePath = (($Directory ?? ($pwsh_mainPath + '\functions')) + "\$Name.ps1")
 
     # create .ps1 file for function
     ni -path $newFilePath -ItemType File
