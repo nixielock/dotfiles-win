@@ -36,8 +36,19 @@ function nf {
     # set filepath for new function
     $newFilePath = (($Directory ?? ($pwsh_mainPath + '\functions')) + "\$Name.ps1")
 
+    if ($null -ne (gi $newFilePath -ea SilentlyContinue)) {
+        wr "$newFilePath already exists - opening to edit!"
+        # -- open .ps1 file for editing
+        sleep 0.5
+        switch ($host.Name) {
+            'Windows PowerShell ISE Host' { ise $newFilePath }
+            default { hx $newFilePath }
+        }
+        return
+    }
+
     # create .ps1 file for function
-    ni -path $newFilePath -ItemType File
+    ni $newFilePath -it File -ea Stop
     
     # -- BUILD TEMPLATE
 
