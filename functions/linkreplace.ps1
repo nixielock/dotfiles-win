@@ -32,7 +32,7 @@ function linkreplace {
     }
     
     process {
-        ro "linking |@cyan|$Name!"
+        ro "linking |@cyan|$Name|@|!"
         ro "fetching |@white|$Path|@|... " -n
         $pathItem = (gi $Path -ea Stop)
         wr "done" -f green
