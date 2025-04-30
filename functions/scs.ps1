@@ -28,7 +28,7 @@ function scs {
     # set date and today's folder path
     $dateToday = (Get-Date)
     $date = $dateToday.ToString('yyyy-MM\\dd')
-    $folderpath = "$scFolder\$date"
+    $folderpath = "$pwsh_scFolder\$date"
 
     
     # open folder if no options selected
@@ -57,7 +57,7 @@ function scs {
         
         # offset date, update folder
         $date = $dateToday.AddDays(-$offset).ToString('yyyy-MM\\dd')
-        $folderpath = "$scFolder\$date"
+        $folderpath = "$pwsh_scFolder\$date"
 
         wr "Checking " -n
         wr "$date..." -f white -n

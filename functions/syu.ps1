@@ -5,6 +5,11 @@ function syu {
     
     # fetch packages to update
     $updates = Get-WingetPackage |? IsUpdateAvailable
+
+    ro "|@b|$($updates.Count) |@|updates available:"
+    foreach ($u in $updates) {
+        ro "  - $($u.Id) |@w|$($u.InstalledVersion) |@|-> |@p|$($u.AvailableVersions[0])"
+    }
     
     # iterate over upgradable packages
     foreach ($pkg in $updates){
