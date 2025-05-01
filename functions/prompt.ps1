@@ -1,7 +1,7 @@
 # ---- prompt - replace the default powershell prompt!
 
 # set variables for prompt
-$pwsh_previousPath = ""
+$script:pwsh_previousPath = ""
 $pwsh_pColor = ""
 $pwsh_pMode = ""
 $pwsh_isAdmin = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544"
@@ -43,18 +43,19 @@ function Prompt {
     wr " | " -f darkred -n
 
     # show entire filepath if just changed
-    if ((gl).ToString() -ne $pwsh_previousPath) {
-        $pwsh_previousPath = (gl).ToString()
+    $pwsh_currentPath = (gl).ToString()
+    if ($pwsh_currentPath -ne $script:pwsh_previousPath) {
+        $script:pwsh_previousPath = $pwsh_currentPath
 
-        $parsedPath = $pwsh_previousPath.Replace("$pwsh_home","~")
+        $parsedPath = $pwsh_currentPath.Replace("$pwsh_home","~")
         wr "$parsedPath" -f white -n
 
     # otherwise, show only the current folder
     } else {
-        $parsedPath = $pwsh_previousPath.Replace("$pwsh_home","~")
+        $parsedPath = $pwsh_currentPath.Replace("$pwsh_home","~")
 
         # show in dark cyan if the path is the $pwsh_mainPath
-        if ($pwsh_previousPath -like "$pwsh_mainPath*") {
+        if ($pwsh_currentPath -like "$pwsh_mainPath*") {
             wr "$(@($parsedPath.Split('\'))[-1])" -f darkcyan -n
 
         } else {
