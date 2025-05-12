@@ -27,7 +27,7 @@ function snippet {
             throw "$pwsh_snippetFile not found"
         }
         
-        $script:currentSnippets = [PSCustomObject[]](cat $pwsh_snippetFile | ConvertFrom-Json -ea SilentlyContinue)
+        $script:currentSnippets = [PSCustomObject[]](cat -raw $pwsh_snippetFile | ConvertFrom-Json -ea SilentlyContinue)
         if ($null -eq $script:currentSnippets) {
             if (!$Force) {
                 throw "Could not convert $pwsh_snippetFile to JSON"
