@@ -1,0 +1,8 @@
+# Kanagawa Seadragon
+# Author: nixie
+
+# adapted from EricHenry's Kanagawa Dragon theme
+
+inherits = "kanagawa-dragon"
+
+"ui.background" = { fg = "dragonWhite", bg = "sumiInk1" }

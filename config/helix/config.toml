@@ -4,6 +4,7 @@ theme = "kanagawa-dragon"
 line-number = "relative"
 mouse = false
 bufferline = "multiple"
+shell = ["pwsh","-c"]
 
 [editor.soft-wrap]
 enable = true
@@ -16,7 +17,7 @@ normal = "block"
 select = "underline"
 
 [editor.smart-tab]
-enable = false
+enable = true
 
 [editor.file-picker]
 hidden = false
@@ -25,6 +26,9 @@ hidden = false
 mode.normal = "   NORMAL   "
 mode.insert = "-- INSERT --"
 mode.select = ">> SELECT <<"
+left = ["mode","read-only-indicator","register","selections","spinner","diagnostics"]
+center = ["primary-selection-length","spacer","spacer","spacer","spacer","position","separator","position-percentage"]
+right = ["version-control","file-name","file-modification-indicator"]
 
 [keys.normal]
   # tweaks

@@ -137,7 +137,7 @@ if (!$profileNoClear) {
 }
 
 # display greeting
-pwsh-greeting $profileTimer.Elapsed.TotalSeconds -f -c
+pwsh-greeting $profileTimer.Elapsed.TotalSeconds -f:$((hostname) -inotmatch '^avd.*') -c
 
 # cleanup profile variables
 rv profileTimer, iterationCount, profileNoClear
