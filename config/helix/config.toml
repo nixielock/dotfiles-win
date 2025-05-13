@@ -26,9 +26,9 @@ hidden = false
 mode.normal = "   NORMAL   "
 mode.insert = "-- INSERT --"
 mode.select = ">> SELECT <<"
-left = ["mode","read-only-indicator","register","selections","spinner","diagnostics"]
-center = ["primary-selection-length","spacer","spacer","spacer","spacer","position","separator","position-percentage"]
-right = ["version-control","file-name","file-modification-indicator"]
+left = ["spacer","mode","read-only-indicator","register","selections","spinner","diagnostics"]
+center = ["primary-selection-length","spacer","spacer","spacer","spacer","position"]
+right = ["version-control","file-name","file-modification-indicator","position-percentage","spacer"]
 
 [keys.normal]
   # tweaks

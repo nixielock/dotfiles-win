@@ -10,7 +10,6 @@ $profileNoClear = $false
 # cheeky aliases
 sal 's' Select-Object
 sal 'wr' Write-Host
-sal 'npp' 'C:\Program Files\Notepad++\notepad++.exe'
 sal 'no' Out-Null
 sal 'str' Out-String
 
@@ -74,9 +73,8 @@ wr "done" -f green
 # ---- FUNCTIONS ----
 #region functions
 
-wr "- loading functions... " -f gray
-
 # dot-source functions
+wr "- loading functions... " -f gray
 ls $pwsh_mainPath\functions\*.ps1 |
     % {
         $name = $_.Name
@@ -90,6 +88,24 @@ ls $pwsh_mainPath\functions\*.ps1 |
             $profileNoClear = $true
         }
     }
+
+# dot-source unsynced (machine-specific) functions
+if (Test-Path "$pwsh_mainPath\functions-unsynced") {
+    wr "- loading unsynced functions... " -f gray
+    ls $pwsh_mainPath\functions-unsynced\*.ps1 |
+        % {
+            $name = $_.Name
+            wr "  - $name -> " -f darkgray -n
+            try {
+                . $_.FullName
+                wr "loaded" -f green
+            } catch {
+                $errLine = $_.InvocationInfo.ScriptLineNumber
+                wr "failed - issue on line $errLine" -f red
+                $profileNoClear = $true
+            }
+        }
+}
 
 #endregion
 
