@@ -22,7 +22,7 @@ function swu {
 
         wr "checking input packages..."
         
-        $updates = [System.Collections.Generic.List[string]]::new()
+        $updates = [System.Collections.Generic.List[PSCustomObject]]::new()
         foreach ($pkgId in $Id) {
             $matchingPkg = $allUpdates |
                 ? { ($_.Id -match ([regex]::Escape($pkgId))) -or ($_.Name -match ([regex]::Escape($pkgId))) }
@@ -35,7 +35,7 @@ function swu {
                 wr "no matches for input '$pkgId'" -f red
                 continue
             }
-            $updates.Add("$($matchingPackage.Id)")
+            $updates.Add($matchingPkg)
         }
     
         ro "updating |@b|$($updates.Count) |@|packages:"

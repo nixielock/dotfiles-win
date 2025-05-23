@@ -18,14 +18,18 @@ function whentoleave {
 
     process {
         $remainingTime = [timespan]::FromHours((38 - $RawTotal - $UnloggedHours))
-        $lastClockTime = (date "$(date [datetime]::Today -f 'yyyy-MM-dd') $LastClockIn")
+        $lastClockTime = (date "$(date ([datetime]::Today) -f 'yyyy-MM-dd') $LastClockIn")
         $targetTime = $lastClockTime + $remainingTime
 
-        if ($targetTime.Day -ne [datetime]::Now.Day) {
+        if ($targetTime.Day -ne ([datetime]::Now.Day)) {
             wr "your input is probably bogus - this says you'll want to clock off on $($targetTime.DayOfWeek)!" -f yellow
             return
         }
 
-        ro "you'll want to clock off at |@white|$((date $lastClockTime -f "HH:mmtt").ToLower())|@|!"
+        if ($targetTime -le ([datetime]::Now)) {
+            ro "you needed to leave at |@red|$((date $targetTime -f "h:mmtt").ToLower())|@|! |@cyan|go now!!"
+        } else {
+            ro "you'll want to clock off at |@white|$((date $targetTime -f "h:mmtt").ToLower())|@|!"
+        }
     }
 }
