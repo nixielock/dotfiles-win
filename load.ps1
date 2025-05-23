@@ -24,6 +24,8 @@ $pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
 $pwsh_datapath    = "$pwsh_mainPath\data"
 
+$env:EDITOR = 'hx'
+
 wr "set -> " -f gray -n
 wr "$($pwsh_mainPath.Replace($pwsh_home,'~'))" -f white
 
