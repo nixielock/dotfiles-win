@@ -22,6 +22,12 @@ function Prompt {
             $pwsh_pMode = "exo"
             break
         }
+        # connected to on-prem
+        { $pwsh_opexActive } {
+            $pwsh_pColor = "darkcyan"
+            $pwsh_pMode = "opex"
+            break
+        }
         # connected to graph
         { $pwsh_graphActive } {
             $pwsh_pColor = "green"
