@@ -7,3 +7,4 @@ functions/Get-ParsedDistributionGroupOwner.ps1
 functions/doc-functions.ps1
 functions/ps*.ps1
 functions/rs*.ps1
+local-spec.json

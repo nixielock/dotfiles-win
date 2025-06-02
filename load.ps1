@@ -15,14 +15,29 @@ sal 'str' Out-String
 
 wr "initialising... " -f darkgray -n
 
+# load spec for local machine
+try {
+    $pwsh_localSpec = (cat "$PSScriptRoot\local-spec.json" -ea Stop | ConvertFrom-Json -Depth 10)
+} catch {
+    $profileNoClear = $true
+    $errorObject = $_
+    # initialise local spec if not found
+    if (-not (Test-Path "$PSScriptRoot\local-spec.json")) {
+        wr "no local spec found!"
+        & "$PSScriptRoot\init.ps1"
+    } else {
+        throw $errorObject
+    }
+}
+
 # globals
-$pwsh_home        = (gi "~").FullName
+$pwsh_home        = $env:USERPROFILE
 $pwsh_homeEsc     = $pwsh_home -replace '\\', '\\'
 $pwsh_username    = $pwsh_home -replace '.*\\', ''
-$pwsh_mainPath    = "$pwsh_home\awldrive\powershell"
+$pwsh_mainPath    = $pwsh_localSpec.MainPath
 $pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
-$pwsh_datapath    = "$pwsh_mainPath\data"
+$pwsh_dataPath    = $pwsh_localSpec.DataPath
 
 wr "set -> " -f gray -n
 wr "$($pwsh_mainPath.Replace($pwsh_home,'~'))" -f white
@@ -128,12 +143,12 @@ wr "done" -f green
 wr "- loading ui modificatons... " -f gray -n
 
 # change title
-if ((ls $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
-    ni $pwsh_datapath\iteration-counter.txt -val '0'
+if ((ls $pwsh_dataPath).Name -notcontains 'iteration-counter.txt') {
+    ni $pwsh_dataPath\iteration-counter.txt -val '0'
 }
-$iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
+$iterationCount = [int](Get-Content -path $pwsh_dataPath\iteration-counter.txt -totalcount 1)
 $iterationCount++
-Out-File -filepath "$pwsh_datapath\iteration-counter.txt" -inputobject $iterationCount
+Out-File -filepath "$pwsh_dataPath\iteration-counter.txt" -inputobject $iterationCount
 
 $host.ui.RawUI.WindowTitle = "spellbook open | pg. $(cndz $iterationCount)z"
 
