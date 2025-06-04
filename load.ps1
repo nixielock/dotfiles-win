@@ -12,6 +12,7 @@ sal 's' Select-Object
 sal 'wr' Write-Host
 sal 'no' Out-Null
 sal 'str' Out-String
+sal 'rand' Get-Random
 
 wr "initialising... " -f darkgray -n
 

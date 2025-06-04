@@ -18,7 +18,7 @@ function splat {
         $invocationSplit = $LiteralInvocation -split ' -' |?ne
     
         # manage first positional param
-        if ($invocationSplit -match '^[a-z\d\-]+ [^\-](?<pos>.+)$') {
+        if ($invocationSplit[0] -match '^[a-z\d\-]+ (?<pos>.+)$') {
             $pos = "InputObject $($matches.pos)"
 
             $newSplit = @($invocationSplit[0] -replace '([^\ ]+) .+$','$1')
