@@ -70,13 +70,9 @@ function Prompt {
     }
 
     # show git output if inside a git repo
-    if ($repodir = (git rev-parse --git-dir 2>$null)) {
+    if ($toplevel = (git rev-parse --show-toplevel 2>$null)) {
+        $reponame = $toplevel -replace ('.*/','')
         $repobranch = (git branch --show-current 2>$null)
-
-        $reponame = switch ($repodir -eq '.git') {
-            $true { ($parsedPath.Split('\'))[-1] }
-            $false { $repodir -replace ('.*/([^/]+)/\.git','$1') }
-        }
         
         wr " | " -f cyan -n
         wr "$($reponame)/" -n
