@@ -1,14 +1,27 @@
 function syu {
+    # load disallow-list
+    $disabledList = $null
+    if (Test-Path "$pwsh_datapath\syu-disallow.txt") {
+        $disabledList = cat "$pwsh_datapath\syu-disallow.txt"
+    }
+    
     # display current scope
     $scopetext = $pwsh_isAdmin ? 'as |@yellow|admin|@|' : 'in |@cyan|user scope|@|'
     ro "updating winget packages $scopetext..."
     
     # fetch packages to update
     $updates = Get-WingetPackage |? IsUpdateAvailable
+    if ($null -ne $disabledList) {
+        $updatesDisabled = $updates |? { $disabledList -contains $_.Id }
+        $updates = $updates |? { $disabledList -notcontains $_.Id }
+    }
 
     ro "|@b|$($updates.Count) |@|updates available:"
     foreach ($u in $updates) {
         ro "  - $($u.Id) |@w|$($u.InstalledVersion) |@|-> |@p|$($u.AvailableVersions[0])"
+    }
+    foreach ($d in $updatesDisabled) {
+        ro "  - $($u.Id) |@w|$($u.InstalledVersion) |@|-> |@e|manually disabled, will not update"
     }
     
     # iterate over upgradable packages
