@@ -21,7 +21,7 @@ function syu {
         ro "  - $($u.Id) |@w|$($u.InstalledVersion) |@|-> |@p|$($u.AvailableVersions[0])"
     }
     foreach ($d in $updatesDisabled) {
-        ro "  - $($u.Id) |@w|$($u.InstalledVersion) |@|-> |@e|manually disabled, will not update"
+        ro "  - $($d.Id) |@w|$($d.InstalledVersion) |@|-> |@e|manually disabled, will not update"
     }
     
     # iterate over upgradable packages
