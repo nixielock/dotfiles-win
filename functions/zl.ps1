@@ -67,6 +67,9 @@ function zl {
     [CmdletBinding()]
     [Alias('lz')]
     param (
+        [Alias('x')]
+        [string] $ExcludePattern,
+        
         [Alias('a')]
         [switch] $All
     )
@@ -87,6 +90,12 @@ function zl {
 
     # init item list
     $itemList = [System.Collections.Generic.List[PSCustomObject]]::new()
+
+    # init ignored counter
+    $useExclude = ($null -ne $ExcludePattern) -and ($ExcludePattern -ne '')
+    if ($useExclude) {
+        $script:ignored = 0
+    }
 
     # -- fetch items
     
@@ -157,14 +166,18 @@ function zl {
         )
 
         process {
-            $c = $pwsh_zlCategories |? Name -eq $Item.Category
-            wr "$($c.Icon ?? "  ")" -f $c.Color -n
-            wr " $($Item.Name)" -f $c.Color -n
-            if ($Item.Target) {
-                wr " -> " -f cyan -n
-                wr "$($Item.Target.Replace($pwsh_home,'~'))" -f white -n
+            if ($useExclude -and ($Item.Category -match 'file') -and ($Item.Name -match $ExcludePattern)) {
+                $script:ignored++
+            } else {
+                $c = $pwsh_zlCategories |? Name -eq $Item.Category
+                wr "$($c.Icon ?? "  ")" -f $c.Color -n
+                wr " $($Item.Name)" -f $c.Color -n
+                if ($Item.Target) {
+                    wr " -> " -f cyan -n
+                    wr "$($Item.Target.Replace($pwsh_home,'~'))" -f white -n
+                }
+                wr ""
             }
-            wr ""
         }
     }
     
@@ -174,6 +187,10 @@ function zl {
     $itemList | ? Category -notmatch '[hg]?dir|[hg]file' | sort Name | print-item
     # hidden files
     $itemList | ? Category -match '[hg]file' | sort Name | print-item
+    # excluded
+    if ($useExclude) {
+        wr "($ignored items excluded)" -f darkgray
+    }
 }
 
 # "alias" function for -All flag
