@@ -1,9 +1,1 @@
-functions/Connect-OnPremExchange.ps1
-functions/Create-RundeckInlineScript.ps1
-functions/Disconnect-OnPremExchange.ps1
-functions/Get-FormattedDistributionGroupProperties.ps1
-functions/Get-ParsedDistributionGroupMember.ps1
-functions/Get-ParsedDistributionGroupOwner.ps1
-functions/doc-functions.ps1
-functions/ps*.ps1
-functions/rs*.ps1
+
