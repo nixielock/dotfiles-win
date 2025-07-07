@@ -10,7 +10,7 @@ function nf {
         # function name
         [parameter(Position = 1)]
         [Alias('d')]
-        [string] $Directory = $null,
+        [string] $Directory = "$pwsh_mainPath\functions",
 
         # number of parameters
         [parameter()]
@@ -34,7 +34,7 @@ function nf {
     }
     
     # set filepath for new function
-    $newFilePath = (($Directory ?? ($pwsh_mainPath + '\functions')) + "\$Name.ps1")
+    $newFilePath = "$Directory\$Name.ps1"
 
     if ($null -ne (gi $newFilePath -ea SilentlyContinue)) {
         wr "$newFilePath already exists - opening to edit!"
