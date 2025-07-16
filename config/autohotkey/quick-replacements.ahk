@@ -20,8 +20,8 @@
 	Send FormatTime(,"yyyyMMddTHHmmss")
 }
 ::#cmdlet::[CmdletBinding()]
-::#parstr::[parameter(Position = 0, ValueFromPipeline, Mandatory)]`n[string] $
+::#parstr::[parameter(Position = 0, Mandatory, ValueFromPipeline)]`n[string] $
 ::#ssc::/*  */{Left}{Left}{Left}
 ::#htc::<{!}--  -->{Left}{Left}{Left}{Left}
-::#list::[System.Collections.Generic.List[]]{Left}{Left}
+::#list::[System.Collections.Generic.List[
 :k20:#hclip::{Esc}ggO@'{Esc}Go'@ | clip
