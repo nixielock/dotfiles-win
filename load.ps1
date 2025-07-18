@@ -16,15 +16,18 @@ sal 'rand' Get-Random
 
 wr "initialising... " -f darkgray -n
 
-# globals
+# > globals
+# paths
 $pwsh_home        = (gi "~").FullName
 $pwsh_homeEsc     = $pwsh_home -replace '\\', '\\'
 $pwsh_username    = $pwsh_home -replace '.*\\', ''
 $pwsh_mainPath    = "$pwsh_home\awldrive\powershell"
+$pwsh_datapath    = "$pwsh_mainPath\data"
+# helper vars
 $pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
-$pwsh_datapath    = "$pwsh_mainPath\data"
-
+$pwsh_isAVDHost   = (hostname) -inotmatch '^avd.*'
+# environment vars
 $env:EDITOR = 'hx'
 
 wr "set -> " -f gray -n
@@ -156,7 +159,7 @@ if (!$profileNoClear) {
 }
 
 # display greeting
-pwsh-greeting $profileTimer.Elapsed.TotalSeconds -f:$((hostname) -inotmatch '^avd.*') -c
+pwsh-greeting $profileTimer.Elapsed.TotalSeconds -f:$pwsh_isAVDHost -c
 
 # cleanup profile variables
 rv profileTimer, iterationCount, profileNoClear
