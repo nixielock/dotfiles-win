@@ -2,7 +2,7 @@
 # go to the path specified in l.nav (local or home)
 # also display a comment if present
 
-$pwsh_navFolder = "$pwsh_home\.nav"
+$pwsh_navFolder = "$env:USERPROFILE\.nav"
 
 function nav {
     [CmdletBinding()]
@@ -25,7 +25,7 @@ function nav {
                 }
                 $outList += [PSCustomObject]@{
                     Marker  = $_.Name -replace '\.nav$',''
-                    Path    = "$($c[0])".Replace("$pwsh_home\",'~\')
+                    Path    = "$($c[0])".Replace("$env:USERPROFILE\",'~\')
                     Comment = $c[1]
                 }
             }
@@ -40,13 +40,13 @@ function nav {
         $lnav = (cat $navPath -to 2 2>$null)
         
         switch ($lnav.Count -eq 1) {
-            $true { $lnav = @($lnav); ro "nav |@s|$Marker" }
-            $false { ro "nav |@b|$Marker|@|: |@s|$($lnav[1])" }
+            $true { $lnav = @($lnav); wr "nav " -n; wr "$Marker" -f green }
+            $false { wr "nav $Marker`: "; wr "$($lnav[1])" -f green }
         }
         zd $lnav[0]
 
     } catch {
-        ro "|@e|nav failed, marker $Marker.nav not set"
+        wr "nav failed, marker $Marker.nav not set" -f red
     }
 }
 
@@ -66,7 +66,7 @@ function setnav {
     try {
         if (!(Test-Path $navPath)) {
             ni $navPath | out-null
-            ro "|@w|created $navPath"
+            wr "created $navPath" -f yellow
         }
 
         clc $navPath
@@ -76,9 +76,9 @@ function setnav {
             ac $navPath $Comment
         }
 
-        ro "|@s|nav set!"
+        wr "nav set!" -f green
     } catch {
-        ro "|@e|setnav failed"
+        wr "setnav failed" -f e
         throw
     }
 }

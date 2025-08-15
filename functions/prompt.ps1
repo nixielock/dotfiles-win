@@ -79,7 +79,7 @@ function Prompt {
     ) -join '')
 
     # show entire filepath if just changed
-    $pwsh_currentPath = (gl).ToString()
+    $pwsh_currentPath = $PWD.Path
     if ($pwsh_currentPath -ne $script:pwsh_previousPath) {
         $script:pwsh_previousPath = $pwsh_currentPath
 
@@ -112,8 +112,8 @@ function Prompt {
     # print second line
     wr "[$pwsh_viModeSection] " -f $pwsh_viModeColor -n
     [Console]::Write("$pwsh_pColor$pwsh_pMode$white ")
-    wr "⟩$reset" -n
+    wr "⟩" -n
 
     # return final space for function to successfully override prompt
-    return " "
+    return "$reset "
 }
