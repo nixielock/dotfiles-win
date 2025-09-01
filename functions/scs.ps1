@@ -109,4 +109,11 @@ function scs {
     }
 }
 
-
+function scs-clear {
+    wr "removing screenshot folders older than 3 months!" -f yellow
+    foreach ($folder in (ls $pwsh_scFolder |? LastWriteTime -lt ((Get-Date).AddMonths(-3)))) {
+        wr "removing screenshots from $($folder.Name)... " -n
+        Remove-Item $folder -Recurse -Force -Confirm:$false -ErrorAction Stop | Out-Null
+        wr "done!" -f white
+    }
+}
