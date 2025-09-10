@@ -27,6 +27,25 @@ $pwsh_datapath    = "$pwsh_mainPath\data"
 $pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
 $pwsh_isAVDHost   = (hostname) -inotmatch '^avd.*'
+$pwsh_ansi = @{
+    'black' = "$pwsh_esc[30m"
+    'red' = "$pwsh_esc[31m"
+    'green' = "$pwsh_esc[32m"
+    'yellow' = "$pwsh_esc[33m"
+    'blue' = "$pwsh_esc[34m"
+    'magenta' = "$pwsh_esc[35m"
+    'cyan' = "$pwsh_esc[36m"
+    'white' = "$pwsh_esc[37m"
+    'brblack' = "$pwsh_esc[90m"
+    'brred' = "$pwsh_esc[91m"
+    'brgreen' = "$pwsh_esc[92m"
+    'bryellow' = "$pwsh_esc[93m"
+    'brblue' = "$pwsh_esc[94m"
+    'brmagenta' = "$pwsh_esc[95m"
+    'brcyan' = "$pwsh_esc[96m"
+    'brwhite' = "$pwsh_esc[97m"
+    'reset' = "$pwsh_esc[0m"
+}
 # environment vars
 $env:EDITOR = 'hx'
 
@@ -55,12 +74,12 @@ $setPSReadLineOptionParams = @{
             'Command' {
                 $pwsh_viModeSection = 'N'
                 $pwsh_viModeColor = 'red'
-                wr "$pwsh_esc[1 q" -n
+                [Console]::Write("$pwsh_esc[1 q")
             }
             default {
                 $pwsh_viModeSection = 'I'
                 $pwsh_viModeColor = 'green'
-                wr "$pwsh_esc[5 q" -n
+                [Console]::Write("$pwsh_esc[5 q")
             }
         }
 
@@ -84,13 +103,13 @@ wr "- loading functions... " -f gray
 ls $pwsh_mainPath\functions\*.ps1 |
     % {
         $name = $_.Name
-        wr "  - $name -> " -f darkgray -n
+        [Console]::Write("$($pwsh_ansi.brblack)  - $name -> ")
         try {
             . $_.FullName
-            wr "loaded" -f green
+            [Console]::WriteLine("$($pwsh_ansi.brgreen)loaded$($pwsh_ansi.reset)")
         } catch {
             $errLine = $_.InvocationInfo.ScriptLineNumber
-            wr "failed - issue on line $errLine" -f red
+            [Console]::WriteLine("$($pwsh_ansi.brred)failed - issue on line $errLine$($pwsh_ansi.reset)")
             $profileNoClear = $true
         }
     }
@@ -101,13 +120,13 @@ if (Test-Path "$pwsh_mainPath\functions-unsynced") {
     ls $pwsh_mainPath\functions-unsynced\*.ps1 |
         % {
             $name = $_.Name
-            wr "  - $name -> " -f darkgray -n
+            [Console]::Write("$($pwsh_ansi.brblack)  - $name -> ")
             try {
                 . $_.FullName
-                wr "loaded" -f green
+                [Console]::WriteLine("$($pwsh_ansi.brgreen)loaded$($pwsh_ansi.reset)")
             } catch {
                 $errLine = $_.InvocationInfo.ScriptLineNumber
-                wr "failed - issue on line $errLine" -f red
+                [Console]::WriteLine("$($pwsh_ansi.brred)failed - issue on line $errLine$($pwsh_ansi.reset)")
                 $profileNoClear = $true
             }
         }
