@@ -10,16 +10,13 @@ function wipe-line {
         [switch] $SkipCurrent
     )
 
-    # set escape character
-    $esc = [char]0x1b
-    
     # wipe current line and reset cursor position
     if (!$SkipCurrent) {
-        wr "$esc[2K$esc[0G" -n
+        wr "`e[2K`e[0G" -n
     }
     
     # wipe lines above
     for ($i = 0; $i -lt $Lines; $i++) {
-        wr "$esc[1F$esc[2K" -n
+        wr "`e[1F`e[2K" -n
     }
 }

@@ -1,20 +1,15 @@
 # pwsh-greeting
-# load the function globally when script is called
 
 function pwsh-greeting {
     param (
         [parameter(Position = 0, ValueFromPipeline)]
         [float] $Elapsed = 0.0,
-
         [Alias('c')]
         [switch] $Center,
-
         [Alias('u')]
         [switch] $ShiftCursor,
-
         [Alias('f')]
         [switch] $Fetch,
-
         [Alias('cr','r')]
         [switch] $Refresh
     )
