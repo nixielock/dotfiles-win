@@ -46,6 +46,9 @@ $pwsh_ansi = @{
     'brwhite' = "$pwsh_esc[97m"
     'reset' = "$pwsh_esc[0m"
 }
+foreach ($key in $pwsh_ansi.Keys) {
+    Set-Variable "ansi_$key" $pwsh_ansi[$key]
+}
 # environment vars
 $env:EDITOR = 'hx'
 
