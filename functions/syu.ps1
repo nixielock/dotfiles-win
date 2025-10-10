@@ -23,6 +23,18 @@ function syu {
     foreach ($d in $updatesDisabled) {
         ro "  - $($d.Id) |@w|$($d.InstalledVersion) |@|-> |@e|manually disabled, will not update"
     }
+
+    if ($updates.Count -lt 1) {
+        return
+    }
+
+    # prompt to continue
+    wr "proceed with updates? [Y/n] " -n
+    wr "> " -f cyan -n
+
+    if ((Read-Host) -match 'n') {
+        return
+    }
     
     # iterate over upgradable packages
     foreach ($pkg in $updates){
@@ -62,5 +74,30 @@ function syu {
         
         # newline for next package
         wr ""
+    }
+
+    wr "updating package list... " -n
+    $installedIds = (Get-WinGetPackage |? Id -notmatch '^(MSIX|ARP)\\').Id
+    $prevIds = cat "$pwsh_datapath\winget-pkglist.txt"
+    $newIds = $installedIds |? { $prevIds -notcontains $_ }
+    $removedIds = $prevIds |? { $installedIds -notcontains $_ }
+
+    if (($newIds -match '\S') -or ($removedIds -match '\S')) {
+        wr ""
+        wr "changes found since last run:" -f cyan 
+        foreach ($id in $newIds) {
+            wr "  - $id -> " -n
+            wr "installed" -f yellow
+        }
+        foreach ($id in $removedIds) {
+            wr "  - $id -> " -n
+            wr "removed" -f yellow
+        }
+
+        wr "writing changes... " -n
+        $installedIds >"$pwsh_datapath\winget-pkglist.txt"
+        wr "done" -f green
+    } else {
+        wr "no changes"
     }
 }

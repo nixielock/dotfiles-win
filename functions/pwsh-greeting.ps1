@@ -38,6 +38,7 @@ function pwsh-greeting {
     
     # display fetch
     if ($Fetch) {
-        hyfetch --distro "Windows 7" -p lesbian
+        hyfetch
+        [Console]::WriteLine()
     }
 }

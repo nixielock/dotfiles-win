@@ -36,6 +36,8 @@ function filesearch {
     } else {
         $trackedFiles = $allFiles
     }
+
+    $trackedFiles = $trackedFiles |? FullName -notmatch '\\\.git\\'
     
     # search tracked files for seach pattern
     foreach ($file in $trackedFiles) {
