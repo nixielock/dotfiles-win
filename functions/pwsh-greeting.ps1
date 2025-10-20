@@ -21,9 +21,9 @@ function pwsh-greeting {
     
     # output header
     if ($Refresh) {
-        $msg = "✨ the spellbook is open - the ritual is renewed ✨"
+        $msg = " the spellbook is open - the ritual is renewed "
     } else {
-        $msg = "✨ spellbook opened - ritual performed in |@b|$([math]::Round($Elapsed,3)) |@|seconds ✨"
+        $msg = " spellbook opened - ritual performed in |@b|$([math]::Round($Elapsed,3)) |@|seconds "
     }
 
     if ($Center) {
@@ -34,7 +34,9 @@ function pwsh-greeting {
         wr "$padding" -n
     }    
     
-    ro "$msg"
+    wr "✨" -n
+    ro "$msg" -n
+    wr "✨"
     
     # display fetch
     if ($Fetch) {

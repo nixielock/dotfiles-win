@@ -49,7 +49,10 @@ function filesearch {
         foreach ($line in $content) {
             $linecount++
             if ($line -imatch $Pattern) {
-                $matchingLines += "|@p|$linecount. |@darkgray|" + [regex]::Replace($line, ($matches[0]), ("|@e|" + $matches[0] + "|@ darkgray|"))
+                $matchText = "$($matches[0])"
+                $escText = (ro-escape $matchText)
+                $replacedLine = [regex]::Replace((ro-escape $line), $escText, ("|@e|$escText|@ darkgray|"))
+                $matchingLines.Add("|@p|$linecount. |@darkgray|$replacedLine")
             }
         }
         
@@ -57,7 +60,7 @@ function filesearch {
             wr "$relPath " -f white -n
             wr "- " -f darkgray -n
             wr "found matches:" -f red
-            $matchingLines | ro
+            $matchingLines | ro -e
             wr ""
             
         } else {

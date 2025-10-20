@@ -12,11 +12,11 @@ function wipe-line {
 
     # wipe current line and reset cursor position
     if (!$SkipCurrent) {
-        wr "`e[2K`e[0G" -n
+        [Console]::Write("`e[2K`e[0G")
     }
     
     # wipe lines above
     for ($i = 0; $i -lt $Lines; $i++) {
-        wr "`e[1F`e[2K" -n
+        [Console]::Write("`e[1F`e[2K")
     }
 }

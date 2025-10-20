@@ -85,7 +85,7 @@ function zl {
 
     # show number of hidden items if not displaying all
     if (($hiddenItems.Count -ge 1) -and (!$All)) {
-        wr "($($hiddenItems.Count) items hidden)" -f darkgray
+        ro "|@darkgray|($($hiddenItems.Count) items hidden)"
     }
 
     # init item list
@@ -170,26 +170,25 @@ function zl {
                 $script:ignored++
             } else {
                 $c = $pwsh_zlCategories |? Name -eq $Item.Category
-                wr "$($c.Icon ?? "  ")" -f $c.Color -n
-                wr " $($Item.Name)" -f $c.Color -n
+                wr ($c.Icon ?? '  ') -f $c.Color -n
+                ro "|@$($c.Color)| $($Item.Name)" -n
                 if ($Item.Target) {
-                    wr " -> " -f cyan -n
-                    wr "$($Item.Target.Replace($pwsh_home,'~'))" -f white -n
+                    ro "|@p| -> |@b|$($Item.Target.Replace($pwsh_home,'~'))" -n
                 }
-                wr ""
+                [Console]::WriteLine()
             }
         }
     }
     
     # directories and hidden directories
-    $itemList | ? Category -match '[hg]?dir' | sort Name | print-item
+    $itemList |? Category -match '[hg]?dir' | sort Name | print-item
     # non-hidden files
-    $itemList | ? Category -notmatch '[hg]?dir|[hg]file' | sort Name | print-item
+    $itemList |? Category -notmatch '[hg]?dir|[hg]file' | sort Name | print-item
     # hidden files
-    $itemList | ? Category -match '[hg]file' | sort Name | print-item
+    $itemList |? Category -match '[hg]file' | sort Name | print-item
     # excluded
     if ($useExclude) {
-        wr "($ignored items excluded)" -f darkgray
+        ro "|@darkgray|($ignored items excluded)"
     }
 }
 

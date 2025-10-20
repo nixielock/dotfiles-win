@@ -22,29 +22,28 @@ $pwsh_home        = (gi "~").FullName
 $pwsh_homeEsc     = $pwsh_home -replace '\\', '\\'
 $pwsh_username    = $pwsh_home -replace '.*\\', ''
 $pwsh_mainPath    = "$pwsh_home\awldrive\powershell"
-$pwsh_datapath    = "$pwsh_mainPath\data"
+$pwsh_datapath    = "$pwsh_mainPath\data\pwsh"
 # helper vars
-$pwsh_roFormatTag = '\|@[\w\ ]*\|'
 $pwsh_esc         = [char]0x1b
 $pwsh_isAVDHost   = (hostname) -inotmatch '^avd.*'
 $pwsh_ansi = @{
-    'black' = "$pwsh_esc[30m"
-    'red' = "$pwsh_esc[31m"
-    'green' = "$pwsh_esc[32m"
-    'yellow' = "$pwsh_esc[33m"
-    'blue' = "$pwsh_esc[34m"
-    'magenta' = "$pwsh_esc[35m"
-    'cyan' = "$pwsh_esc[36m"
-    'white' = "$pwsh_esc[37m"
-    'brblack' = "$pwsh_esc[90m"
-    'brred' = "$pwsh_esc[91m"
-    'brgreen' = "$pwsh_esc[92m"
-    'bryellow' = "$pwsh_esc[93m"
-    'brblue' = "$pwsh_esc[94m"
-    'brmagenta' = "$pwsh_esc[95m"
-    'brcyan' = "$pwsh_esc[96m"
-    'brwhite' = "$pwsh_esc[97m"
-    'reset' = "$pwsh_esc[0m"
+    'black' = "`e[30m"
+    'red' = "`e[31m"
+    'green' = "`e[32m"
+    'yellow' = "`e[33m"
+    'blue' = "`e[34m"
+    'magenta' = "`e[35m"
+    'cyan' = "`e[36m"
+    'white' = "`e[37m"
+    'brblack' = "`e[90m"
+    'brred' = "`e[91m"
+    'brgreen' = "`e[92m"
+    'bryellow' = "`e[93m"
+    'brblue' = "`e[94m"
+    'brmagenta' = "`e[95m"
+    'brcyan' = "`e[96m"
+    'brwhite' = "`e[97m"
+    'reset' = "`e[0m"
 }
 foreach ($key in $pwsh_ansi.Keys) {
     Set-Variable "ansi_$key" $pwsh_ansi[$key]
@@ -69,7 +68,7 @@ $setPSReadLineOptionParams = @{
     EditMode = 'vi'
     ExtraPromptLineCount = 1
     ContinuationPrompt = ''
-    # PromptText = " ⟩", "!⟩"
+    PromptText = "⟩ "
     ViModeIndicator = 'Script'
     ViModeChangeHandler = {
         param ($viMode)
@@ -77,12 +76,12 @@ $setPSReadLineOptionParams = @{
             'Command' {
                 $pwsh_viModeSection = 'N'
                 $pwsh_viModeColor = 'red'
-                [Console]::Write("$pwsh_esc[1 q")
+                [Console]::Write("`e[1 q")
             }
             default {
                 $pwsh_viModeSection = 'I'
                 $pwsh_viModeColor = 'green'
-                [Console]::Write("$pwsh_esc[5 q")
+                [Console]::Write("`e[5 q")
             }
         }
 
