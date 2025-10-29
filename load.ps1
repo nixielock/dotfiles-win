@@ -46,7 +46,7 @@ $pwsh_ansi = @{
     'reset' = "`e[0m"
 }
 foreach ($key in $pwsh_ansi.Keys) {
-    Set-Variable "ansi_$key" $pwsh_ansi[$key]
+    Set-Variable "ansi_$key" $pwsh_ansi[$key] -Option ReadOnly
 }
 # environment vars
 $env:EDITOR = 'hx'
@@ -60,39 +60,41 @@ wr "$($pwsh_mainPath.Replace($pwsh_home,'~'))" -f white
 #region setup
 
 wr "- configuring PSReadLine... " -f gray -n
+try {
+    # configure vi keys
+    $pwsh_viModeSection = 'I'
+    $pwsh_viModeColor = 'green'
+    $setPSReadLineOptionParams = @{
+        EditMode = 'vi'
+        ExtraPromptLineCount = 1
+        ContinuationPrompt = ''
+        PromptText = "⟩ "
+        ViModeIndicator = 'Script'
+        ViModeChangeHandler = {
+            param ($viMode)
+            switch ($viMode) {
+                'Command' {
+                    $pwsh_viModeSection = 'N'
+                    $pwsh_viModeColor = 'red'
+                    [Console]::Write("`e[1 q")
+                }
+                default {
+                    $pwsh_viModeSection = 'I'
+                    $pwsh_viModeColor = 'green'
+                    [Console]::Write("`e[5 q")
+                }
+            }
 
-# configure vi keys
-$pwsh_viModeSection = 'I'
-$pwsh_viModeColor = 'green'
-$setPSReadLineOptionParams = @{
-    EditMode = 'vi'
-    ExtraPromptLineCount = 1
-    ContinuationPrompt = ''
-    PromptText = "⟩ "
-    ViModeIndicator = 'Script'
-    ViModeChangeHandler = {
-        param ($viMode)
-        switch ($viMode) {
-            'Command' {
-                $pwsh_viModeSection = 'N'
-                $pwsh_viModeColor = 'red'
-                [Console]::Write("`e[1 q")
-            }
-            default {
-                $pwsh_viModeSection = 'I'
-                $pwsh_viModeColor = 'green'
-                [Console]::Write("`e[5 q")
-            }
+            [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
         }
-
-        [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
     }
+    Set-PSReadlineOption @setPSReadLineOptionParams
+
+    # set directory formatting
+    $PSStyle.FileInfo.Directory = "`e[107;30m"
+} catch {
+    $profileNoClear = $true
 }
-Set-PSReadlineOption @setPSReadLineOptionParams
-
-# set directory formatting
-$PSStyle.FileInfo.Directory = "`e[107;30m"
-
 wr "done" -f green
 
 #endregion setup
@@ -140,11 +142,13 @@ if (Test-Path "$pwsh_mainPath\functions-unsynced") {
 #region externals
 
 wr "- loading externals... " -f gray -n
-
-#f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
-Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
-#f45873b3-b655-43a6-b217-97c00aa0db58
-
+try {
+    #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
+    Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
+    #f45873b3-b655-43a6-b217-97c00aa0db58
+} catch {
+    $profileNoClear = $true
+}
 wr "done" -f green
 
 #endregion
@@ -153,17 +157,19 @@ wr "done" -f green
 #region customisations
 
 wr "- loading ui modificatons... " -f gray -n
+try {
+    # change title
+    if ((ls $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
+        ni $pwsh_datapath\iteration-counter.txt -val '0'
+    }
+    $iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
+    $iterationCount++
+    Out-File -filepath "$pwsh_datapath\iteration-counter.txt" -inputobject $iterationCount
 
-# change title
-if ((ls $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
-    ni $pwsh_datapath\iteration-counter.txt -val '0'
+    $host.ui.RawUI.WindowTitle = "spellbook open | pg. $(cndz $iterationCount)z"
+} catch {
+    $profileNoClear = $true
 }
-$iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
-$iterationCount++
-Out-File -filepath "$pwsh_datapath\iteration-counter.txt" -inputobject $iterationCount
-
-$host.ui.RawUI.WindowTitle = "spellbook open | pg. $(cndz $iterationCount)z"
-
 wr "done" -f green
 
 #endregion
