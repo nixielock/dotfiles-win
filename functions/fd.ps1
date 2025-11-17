@@ -10,16 +10,24 @@ function fd {
 
         # show the entire printed value of each property
         [Alias('s')]
-        [switch] $ShowFullValues
+        [switch] $ShowFullValues,
+
+        [Alias('n')]
+        [switch] $NoLinebreak
     )
 
     process {
         $properties = $InputObject.PSObject.Properties.Name
+        if ($properties.Count -lt 1) {
+            return
+        }
+
         $limWidth = $Host.UI.RawUI.WindowSize.Width - 4
         if ($limWidth -lt 1) {
             throw "your $($Host.UI.RawUI.WindowSize.Height)x$columns terminal size is bogus. expect trouble"
         }
 
+        if (-not $NoLinebreak) { [Console]::WriteLine() }
         foreach ($p in $properties) {
             $val = $InputObject.$p
             if ($null -eq $val) {
@@ -79,6 +87,10 @@ function fd {
                 ro "    $outString"
             }
         }
+    }
+
+    end {
+        if (-not $NoLinebreak) { [Console]::WriteLine() }
     }
 }
 
