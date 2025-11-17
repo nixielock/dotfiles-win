@@ -41,20 +41,22 @@ function prompt {
         }
     }
 
+    Set-PSReadlineOption -ContinuationPrompt "".PadLeft((7 + $pwsh_pMode.Length))
+
     # write ISO date and vertical bar (and wraparound bar!)
-    ro "|@dred|//|@dgray| $(zdate -div '' -pad)T|@|$(ztime -div '' -PadHours)${dGray}z|@dred| | " -n
+    ro "|@dred|//|@dgray| $(zdate -div '' -pad)T|@|$(ztime -div '' -PadHours)|@dgray|z|@dred| | " -n
 
     # show entire filepath if just changed
     $pwsh_currentPath = $PWD.Path
     if ($pwsh_currentPath -ne $script:pwsh_previousPath) {
         $script:pwsh_previousPath = $pwsh_currentPath
 
-        $parsedPath = $pwsh_currentPath.Replace("$pwsh_home","~")
+        $parsedPath = $pwsh_currentPath.Replace("$env:USERPROFILE","~")
         ro "|@b|$parsedPath" -n
 
     # otherwise, show only the current folder
     } else {
-        $endPath = $pwsh_currentPath -replace '.*\\([^\\]+)$', '$1'
+        $endPath = $pwsh_currentPath.Replace("$env:USERPROFILE","~") -replace '.*\\([^\\]+)$', '$1'
         if ($pwsh_currentPath.Contains($env:USERPROFILE)) {
             $endPath = "|@dcyan|$endPath"
         }

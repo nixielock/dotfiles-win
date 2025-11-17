@@ -6,7 +6,7 @@ function graph-get {
     )
 
     try {
-        ro "|@ darkgray|invoking request to |@b|/beta/$Uri|@ darkgray|..."
+        ro "|@d|invoking request to |@b|/beta/$Uri|@d|..."
         
         $returnStatus = "n/a"
         $invokeMgGraphRequestParams = @{
@@ -17,7 +17,7 @@ function graph-get {
         }
         $response = Invoke-MgGraphRequest @invokeMgGraphRequestParams
 
-        ro "|@ darkgray|response for request |@b|$Uri|@darkgray|:"
+        ro "|@d|response for request |@b|$Uri|@d|:"
         wr "return status: " -n
         wr "$returnStatus" -f green
         $response | fl *
@@ -39,3 +39,4 @@ function graph-get {
         wr "----------------------------------" -f red
     }
 }
+

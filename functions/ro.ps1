@@ -1,25 +1,24 @@
-#Requires -Version 7
 # ---- ro - write ansi-formatted output using inline tags
 
 if ($null -eq $ansi_reset) {
     $pwsh_ansi = @{
-        'black' = "`e[30m"
-        'red' = "`e[31m"
-        'green' = "`e[32m"
-        'yellow' = "`e[33m"
-        'blue' = "`e[34m"
-        'magenta' = "`e[35m"
-        'cyan' = "`e[36m"
-        'white' = "`e[37m"
-        'brblack' = "`e[90m"
-        'brred' = "`e[91m"
-        'brgreen' = "`e[92m"
-        'bryellow' = "`e[93m"
-        'brblue' = "`e[94m"
-        'brmagenta' = "`e[95m"
-        'brcyan' = "`e[96m"
-        'brwhite' = "`e[97m"
-        'reset' = "`e[0m"
+        'black' = "$([char]0x1b)[30m"
+        'red' = "$([char]0x1b)[31m"
+        'green' = "$([char]0x1b)[32m"
+        'yellow' = "$([char]0x1b)[33m"
+        'blue' = "$([char]0x1b)[34m"
+        'magenta' = "$([char]0x1b)[35m"
+        'cyan' = "$([char]0x1b)[36m"
+        'white' = "$([char]0x1b)[37m"
+        'brblack' = "$([char]0x1b)[90m"
+        'brred' = "$([char]0x1b)[91m"
+        'brgreen' = "$([char]0x1b)[92m"
+        'bryellow' = "$([char]0x1b)[93m"
+        'brblue' = "$([char]0x1b)[94m"
+        'brmagenta' = "$([char]0x1b)[95m"
+        'brcyan' = "$([char]0x1b)[96m"
+        'brwhite' = "$([char]0x1b)[97m"
+        'reset' = "$([char]0x1b)[0m"
     }
     foreach ($key in $pwsh_ansi.Keys) {
         Set-Variable "ansi_$key" $pwsh_ansi[$key]
@@ -38,7 +37,7 @@ $ro_list = @{
     magenta = @('darkmagenta','dmagenta')
     cyan = @('darkcyan','dcyan')
     white = @('gray')
-    brblack = @('darkgray','dgray')
+    brblack = @('d','dim','darkgray','dgray')
     brred = @('e','error','red')
     brgreen = @('s','success','green')
     bryellow = @('w','warn','warning','yellow')

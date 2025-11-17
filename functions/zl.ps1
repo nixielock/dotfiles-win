@@ -85,7 +85,7 @@ function zl {
 
     # show number of hidden items if not displaying all
     if (($hiddenItems.Count -ge 1) -and (!$All)) {
-        ro "|@darkgray|($($hiddenItems.Count) items hidden)"
+        ro "|@d|($($hiddenItems.Count) items hidden)"
     }
 
     # init item list
@@ -188,9 +188,10 @@ function zl {
     $itemList |? Category -match '[hg]file' | sort Name | print-item
     # excluded
     if ($useExclude) {
-        ro "|@darkgray|($ignored items excluded)"
+        ro "|@d|($ignored items excluded)"
     }
 }
 
 # "alias" function for -All flag
 function zla { zl -a }
+

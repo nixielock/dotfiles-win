@@ -18,11 +18,12 @@ wr "initialising... " -f darkgray -n
 
 # > globals
 # paths
-$pwsh_home        = (gi "~").FullName
+$pwsh_home        = $env:USERPROFILE
 $pwsh_homeEsc     = $pwsh_home -replace '\\', '\\'
 $pwsh_username    = $pwsh_home -replace '.*\\', ''
-$pwsh_mainPath    = "$pwsh_home\awldrive\powershell"
-$pwsh_datapath    = "$pwsh_mainPath\data\pwsh"
+$pwsh_mainpath    = "$pwsh_home\awldrive\powershell"
+$pwsh_datapath    = "$pwsh_mainpath\data\pwsh"
+$pwsh_scriptpath  = "$pwsh_mainpath\scripts"
 # helper vars
 $pwsh_esc         = [char]0x1b
 $pwsh_isAVDHost   = (hostname) -inotmatch '^avd.*'

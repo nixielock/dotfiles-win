@@ -51,8 +51,8 @@ function filesearch {
             if ($line -imatch $Pattern) {
                 $matchText = "$($matches[0])"
                 $escText = (ro-escape $matchText)
-                $replacedLine = [regex]::Replace((ro-escape $line), $escText, ("|@e|$escText|@ darkgray|"))
-                $matchingLines.Add("|@p|$linecount. |@darkgray|$replacedLine")
+                $replacedLine = [regex]::Replace((ro-escape $line), $escText, ("|@e|$escText|@d|"))
+                $matchingLines.Add("|@p|$linecount. |@d|$replacedLine")
             }
         }
         
@@ -69,3 +69,4 @@ function filesearch {
         }
     }
 }
+
