@@ -47,7 +47,7 @@ function fd {
                 } else {
                     $listBuffer = @()
                     foreach ($item in $val) {
-                        if ((($listBuffer -join ', ').Length + "$item".Length + 5) -gt $limWidth) {
+                        if ((($listBuffer -join ', ').Length + "$item".Length + 9) -gt $limWidth) {
                             $listBuffer += "..."
                             break
                         }
@@ -63,7 +63,7 @@ function fd {
                     $listBuffer = @()
                     foreach ($key in $val.Keys) {
                         $item = "[$key, $($val[$key])]"
-                        if ((($listBuffer -join ', ').Length + $item.Length + 5) -gt $limWidth) {
+                        if ((($listBuffer -join ', ').Length + $item.Length + 9) -gt $limWidth) {
                             $listBuffer += "..."
                             break
                         }
@@ -72,7 +72,7 @@ function fd {
                     $outString = "{$($listBuffer -join ', ')}"
                 }
             } else {
-                $outString = "$val"
+                $outString = "$val" -replace "(?<=.{$($limWidth - 3)}).{3}.+", '...'
             }
 
             if ($ShowFullValues) {
