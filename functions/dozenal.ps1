@@ -55,9 +55,8 @@ $pwsh_dzGlyphSets = @(
         11 = 'H' }
 )
 
-function Convert-DecimalToDozenal {
+function cndz {
     [CmdletBinding()]
-    [Alias('cndz')]
     param (
         [parameter(Mandatory=$true, Position=0, ValueFromPipeline)]
         [int] $Decimal,
@@ -97,9 +96,8 @@ function Convert-DecimalToDozenal {
     }
 }
 
-function Convert-DozenalToDecimal {
+function cnzd {
     [CmdletBinding()]
-    [Alias('cnzd')]
     param (
         [parameter(Mandatory=$true, Position=0, ValueFromPipeline)]
         [string] $Dozenal
@@ -152,9 +150,8 @@ function Convert-DozenalToDecimal {
     }
 }
 
-function Get-DozenalTime {
+function ztime {
     [CmdletBinding()]
-    [Alias('ztime')]
     param (
         [string] $Divider = ":",
         [switch] $AmPm,
@@ -164,9 +161,9 @@ function Get-DozenalTime {
 
     $decTime = (Get-Date -Format "H:h:m:tt") -split ":"
     $timeHash = @{
-        Hour = Convert-DecimalToDozenal $decTime[0]
-        ShortHour = Convert-DecimalToDozenal $decTime[1]
-        Minute = (Convert-DecimalToDozenal $decTime[2]).PadLeft(2,'0')
+        Hour = cndz $decTime[0]
+        ShortHour = cndz $decTime[1]
+        Minute = (cndz $decTime[2]).PadLeft(2,'0')
         Polarity = $decTime[3].ToLower()
     }
 
@@ -189,9 +186,8 @@ function Get-DozenalTime {
     return $timeOut
 }
 
-function Get-DozenalDate {
+function zdate {
     [CmdletBinding()]
-    [Alias('zdate')]
     param (
         [string] $Divider = "-",
         [ValidateSet('ISO', 'AUS', 'AusGov', 'Verbose')]
@@ -201,9 +197,9 @@ function Get-DozenalDate {
 
     $decDate = (Get-Date -Format "yyyy:M:d:MMMM") -split ":"
     $dateHash = @{
-        Year = Convert-DecimalToDozenal $decDate[0]
-        Month = Convert-DecimalToDozenal $decDate[1]
-        Day = Convert-DecimalToDozenal $decDate[2]
+        Year = cndz $decDate[0]
+        Month = cndz $decDate[1]
+        Day = cndz $decDate[2]
     }
 
     if ($Pad) {

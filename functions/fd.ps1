@@ -93,4 +93,3 @@ function fd {
         if (-not $NoLinebreak) { [Console]::WriteLine() }
     }
 }
-

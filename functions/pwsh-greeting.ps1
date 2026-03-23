@@ -26,6 +26,9 @@ function pwsh-greeting {
         $msg = " spellbook opened - ritual performed in |@b|$([math]::Round($Elapsed,3)) |@|seconds "
     }
 
+    # moon phase
+    
+
     if ($Center) {
         # get console centre
         $consoleCentre = $Host.UI.RawUI.BufferSize.Width / 2

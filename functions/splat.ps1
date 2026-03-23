@@ -91,10 +91,10 @@ function splat {
     
         # copy splat to clipboard without ro tags
         ro "|@s|done!"
-        ($outputLiteral -replace $pwsh_roFormatTag, '') | clip
+        ($outputLiteral -replace '\|@ ?(\w+)?\|', '') | Set-Clipboard
         ro "splatted command |@p|copied to clipboard!`n"
 
         # display splat with ro formatting
-        $outputLiteral | ro
+        $outputLiteral -split "`n" | ro
     }
 }

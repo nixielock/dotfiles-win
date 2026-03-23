@@ -10,7 +10,7 @@ $profileNoClear = $false
 # cheeky aliases
 sal 's' Select-Object
 sal 'wr' Write-Host
-sal 'no' Out-Null
+sal 'null' Out-Null
 sal 'str' Out-String
 sal 'rand' Get-Random
 
@@ -18,12 +18,12 @@ wr "initialising... " -f darkgray -n
 
 # > globals
 # paths
-$pwsh_home        = $env:USERPROFILE
-$pwsh_homeEsc     = $pwsh_home -replace '\\', '\\'
-$pwsh_username    = $pwsh_home -replace '.*\\', ''
-$pwsh_mainpath    = "$pwsh_home\awldrive\powershell"
-$pwsh_datapath    = "$pwsh_mainpath\data\pwsh"
-$pwsh_scriptpath  = "$pwsh_mainpath\scripts"
+$pwsh_home            = $env:USERPROFILE
+$pwsh_homeEsc         = $pwsh_home -replace '\\', '\\'
+$pwsh_username        = $pwsh_home -replace '.*\\', ''
+$pwsh_mainpath        = "~\awldrive\Scripts"
+$pwsh_datapath        = "$pwsh_mainpath\data"
+$pwsh_scriptpath      = "$pwsh_mainpath\scripts"
 # helper vars
 $pwsh_esc         = [char]0x1b
 $pwsh_isAVDHost   = (hostname) -inotmatch '^avd.*'

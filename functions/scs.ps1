@@ -4,7 +4,7 @@
 
 # ---- global screenshot folder variable
 # IMPORTANT: set your screenshot folder path here!
-$global:pwsh_scFolder = "$pwsh_home\Pictures\Screenshots"
+$global:pwsh_screenshotpath = "$env:USERPROFILE\awldrive\images\screenshots"
 
 # ---- function proper
 function scs {
@@ -28,7 +28,7 @@ function scs {
     # set date and today's folder path
     $dateToday = (Get-Date)
     $date = $dateToday.ToString('yyyy-MM\\dd')
-    $folderpath = "$pwsh_scFolder\$date"
+    $folderpath = "$pwsh_screenshotpath\$date"
 
     
     # open folder if no options selected
@@ -57,7 +57,7 @@ function scs {
         
         # offset date, update folder
         $date = $dateToday.AddDays(-$offset).ToString('yyyy-MM\\dd')
-        $folderpath = "$pwsh_scFolder\$date"
+        $folderpath = "$pwsh_screenshotpath\$date"
 
         wr "Checking " -n
         wr "$date..." -f white -n
@@ -70,7 +70,8 @@ function scs {
     if ($OpenFolder) {
         wr "Opening screenshot folder " -n
         wr "$date... " -f white -n
-        explorer $folderpath && wr "done!" -f green
+        explorer $folderpath
+        wr "done!" -f green
     }
 
     # exit function if only opening folder
@@ -111,7 +112,7 @@ function scs {
 
 function scs-clear {
     wr "removing screenshot folders older than 3 months!" -f yellow
-    foreach ($folder in (ls $pwsh_scFolder |? LastWriteTime -lt ((Get-Date).AddMonths(-3)))) {
+    foreach ($folder in (ls $pwsh_screenshotpath |? LastWriteTime -lt ((Get-Date).AddMonths(-3)))) {
         wr "removing screenshots from $($folder.Name)... " -n
         Remove-Item $folder -Recurse -Force -Confirm:$false -ErrorAction Stop | Out-Null
         wr "done!" -f white

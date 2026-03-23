@@ -10,6 +10,7 @@ function delcat {
     )
 
     $script:killcount = 0
+
     $noRm = (($null -ne $MoveTo) -and ($MoveTo -ne ''))
     if ($noRm) {
         try {

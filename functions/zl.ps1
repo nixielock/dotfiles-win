@@ -67,108 +67,56 @@ function zl {
     [CmdletBinding()]
     [Alias('lz')]
     param (
+        [parameter(Position = 0, ValueFromPipeline)]
+        [string] $Path = '.',
+
         [Alias('x')]
         [string] $ExcludePattern,
         
         [Alias('a')]
-        [switch] $All
+        [switch] $All,
+
+        [Alias('l')]
+        [switch] $LongFormat
     )
 
-    # -- setup
-    
-    # write header
-    Write-Host " $($pwd -replace "$pwsh_homeEsc","~")\ " -b white -f black -n
-    Write-Host ""
+    begin {
+        # repeatable function
+        function print-item {
+            [CmdletBinding()]
+            param (
+                [parameter(Position = 0, ValueFromPipeline)]
+                [PSCustomObject] $Item
+            )
 
-    # pre-fetch list of hidden items
-    $hiddenItems = (ls -Hidden)
-
-    # show number of hidden items if not displaying all
-    if (($hiddenItems.Count -ge 1) -and (!$All)) {
-        ro "|@d|($($hiddenItems.Count) items hidden)"
-    }
-
-    # init item list
-    $itemList = [System.Collections.Generic.List[PSCustomObject]]::new()
-
-    # init ignored counter
-    $useExclude = ($null -ne $ExcludePattern) -and ($ExcludePattern -ne '')
-    if ($useExclude) {
-        $script:ignored = 0
-    }
-
-    # -- fetch items
-    
-    # populate item list
-    foreach ($item in (ls)) {
-        # init variables
-        $ctype = $null
-        $name = $item.Name
-        $dotted = ($name -match '^\.')
-        
-        # > assign item type:
-        
-        # directories
-        if ($item.PSIsContainer) {
-            $ctype = switch ($dotted) {
-                $true { 'hdir' }
-                $false { 'dir' }
-            }
-        }
-
-        # pre-defined extensions
-        $ctype ??= foreach ($c in ($pwsh_zlCategories |? Regex)) {
-            if ($item.Extension -match $c.Regex) {
-                $c.Name
-                break
-            }
-        }
-        
-        # remaining files
-        $ctype ??= switch ($dotted) {
-            $true { 'hfile' }
-            $false { 'file' }
-        }
-
-        # .git items
-        if ($name -match '\.git') {
-            $ctype = $ctype -replace 'h(file|dir)','g$1'
-        }
-
-        # > add item to list
-        $itemList += [PSCustomObject]@{
-            Name     = $name
-            Category = $ctype
-            Target   = $item.Target
-        }
-    }
-
-    # add hidden items to list
-    if ($All) {
-        foreach ($item in ($hiddenItems)) {
-            $firstLetter = ($item.Name -match '\.git') ? 'g' : 'h'
-            $itemList += [PSCustomObject]@{
-                Name     = $item.Name
-                Category = $firstLetter + (($item.PSIsContainer) ? 'dir' : 'file')
-                Target   = $item.Target
-            }
-        }
-    }
-
-    # -- output stages
-    
-    # repeatable function
-    function print-item {
-        [CmdletBinding()]
-        param (
-            [parameter(Position = 0, ValueFromPipeline)]
-            [PSCustomObject] $Item
-        )
-
-        process {
-            if ($useExclude -and ($Item.Category -match 'file') -and ($Item.Name -match $ExcludePattern)) {
-                $script:ignored++
-            } else {
+            process {
+                if ($useExclude -and ($Item.Category -match 'file') -and ($Item.Name -match $ExcludePattern)) {
+                    $script:ignored++
+                    return
+                }
+                if ($LongFormat) {
+                    $modeFormat = $Item.Mode
+                    $modeFormat = $modeFormat -replace '(?<!-)(-+)(?!-)', '|@d|$1|@b|'
+                    $sizeFormat = $Item.Length
+                    if ($Item.Category -match 'dir') {
+                        $sizeFormat = "".PadLeft(6)
+                    } elseif ($Item.Length -ge 1GB) {
+                        $sizeFormat = $sizeFormat / 1GB
+                        $sizeFormat = '{0:N1}' -f $sizeFormat
+                        $sizeFormat = "|@dred|", "$sizeFormat".PadLeft(5), "G" -join ''
+                    } elseif ($Item.Length -ge 1MB) {
+                        $sizeFormat = $sizeFormat / 1MB
+                        $sizeFormat = '{0:N1}' -f $sizeFormat
+                        $sizeFormat = "|@dyellow|", "$sizeFormat".PadLeft(5), "M" -join ''
+                    } elseif ($Item.Length -ge 1KB) {
+                        $sizeFormat = $sizeFormat / 1KB
+                        $sizeFormat = '{0:N1}' -f $sizeFormat
+                        $sizeFormat = "|@|", "$sizeFormat".PadLeft(5), "K" -join ''
+                    } else {
+                        $sizeFormat = "|@d|", "$sizeFormat".PadLeft(6) -join ''
+                    }
+                    ro "|@b|$modeFormat|@| $sizeFormat  " -n
+                }
                 $c = $pwsh_zlCategories |? Name -eq $Item.Category
                 wr ($c.Icon ?? '  ') -f $c.Color -n
                 ro "|@$($c.Color)| $($Item.Name)" -n
@@ -178,20 +126,94 @@ function zl {
                 [Console]::WriteLine()
             }
         }
+        filter IsDirectory { if ($_.Category -match '[hg]?dir') { $_ } }
+        filter IsVisibleFile { if ($_.Category -notmatch '[hg]?dir|[hg]file') { $_ } }
+        filter IsHiddenFile { if ($_.Category -match '[hg]file') { $_ } }
     }
+
+    process {
+        # -- setup
+        $pathItem = (gi $Path -ea Stop)
+        if (-not $pathItem.PSIsContainer) {
+            throw "$($pathItem.Name) is not a directory"
+        }
+        $shortPath = $pathItem.FullName.Replace("$env:USERPROFILE", "~")
+        ro "|@b|`e[40m $shortPath "
+
+        # pre-fetch list of hidden items
+        $allItems = (ls $Path -Force)
+        $hiddenItems = $allItems |? Mode -match 'h'
+
+        # set whether hidden items are included
+        if ($All) {
+            $targetItems = $allItems
+        } else {
+            $targetItems = $allItems |? Mode -notmatch 'h'
+            # show number of hidden items if not displaying all
+            if ($hiddenItems.Count -ge 1) {
+                ro "|@d|($($hiddenItems.Count) items hidden)"
+            }
+        }
+
+        # init item list
+        $itemList = [System.Collections.Generic.List[PSCustomObject]]::new()
+
+        # init ignored counter
+        $useExclude = ($null -ne $ExcludePattern) -and ($ExcludePattern -ne '')
+        if ($useExclude) {
+            $script:ignored = 0
+        }
+
+        # -- fetch items
     
-    # directories and hidden directories
-    $itemList |? Category -match '[hg]?dir' | sort Name | print-item
-    # non-hidden files
-    $itemList |? Category -notmatch '[hg]?dir|[hg]file' | sort Name | print-item
-    # hidden files
-    $itemList |? Category -match '[hg]file' | sort Name | print-item
-    # excluded
-    if ($useExclude) {
-        ro "|@d|($ignored items excluded)"
+        # populate item list
+        foreach ($item in $targetItems) {
+            # init variables
+            $ctype = $null
+            $name = $item.Name
+            $hidden = ($name -match '^\.') -or ($item.Mode -match 'h')
+        
+            # > assign item type:
+            # directories
+            if ($item.PSIsContainer) {
+                $ctype = $hidden ? 'hdir' : 'dir'
+            }
+            # pre-defined extensions
+            $ctype ??= foreach ($c in ($pwsh_zlCategories |? Regex)) {
+                if ($item.Extension -match $c.Regex) { $c.Name; break }
+            }
+            # remaining files
+            $ctype ??= $hidden ? 'hfile' : 'file'
+            # .git items
+            if ($name -match '\.git') {
+                $ctype = $ctype -replace 'h(file|dir)','g$1'
+            }
+
+            # > add item to list
+            $itemList += [PSCustomObject]@{
+                Name     = $name
+                Category = $ctype
+                Target   = $item.Target
+                Length   = $item.Length
+                Mode     = $item.Mode
+            }
+        }
+
+        # -- output stages
+    
+        # directories and hidden directories
+        $itemList | IsDirectory | sort Name | print-item
+        # non-hidden files
+        $itemList | IsVisibleFile | sort Name | print-item
+        # hidden files
+        $itemList | IsHiddenFile | sort Name | print-item
+        # excluded
+        if ($useExclude) {
+            ro "|@d|($ignored items excluded)"
+        }
     }
 }
 
-# "alias" function for -All flag
+# "alias" function for -All and -LongFormat flags
 function zla { zl -a }
-
+function zll { zl -l }

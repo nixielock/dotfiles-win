@@ -36,7 +36,7 @@ function prompt {
         }
         # none of the above
         default {
-            $pwsh_pColor = "|@dgray|"
+            $pwsh_pColor = "|@d|"
             $pwsh_pMode = "pwsh"
         }
     }
@@ -44,7 +44,7 @@ function prompt {
     Set-PSReadlineOption -ContinuationPrompt "".PadLeft((7 + $pwsh_pMode.Length))
 
     # write ISO date and vertical bar (and wraparound bar!)
-    ro "|@dred|//|@dgray| $(zdate -div '' -pad)T|@|$(ztime -div '' -PadHours)|@dgray|z|@dred| | " -n
+    ro "|@dred|//|@d| $(zdate -div '' -pad)T|@|$(ztime -div '' -PadHours)z|@dred| | " -n
 
     # show entire filepath if just changed
     $pwsh_currentPath = $PWD.Path
