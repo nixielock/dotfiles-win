@@ -4,25 +4,6 @@
 # uses X for 10d and H for 11d by default, but accepts other sets in $pwsh_dzGlyphSets
 # you can change the output glyphs for 10d and 11d in $pwsh_dzGlyphs too!
 
-function Get-QuotientAndRemainder {
-    [CmdletBinding()]
-    param (
-        [parameter(Mandatory=$true, Position=0, ValueFromPipeline)]
-        [int] $Numerator,
-
-        [parameter(Mandatory=$true, Position=1, ValueFromPipeline)]
-        [int] $Denominator
-    )
-
-    $remainderOut = $Numerator % $Denominator
-    $quotientOut = ($Numerator - $remainderOut) / $Denominator
-
-    return @{
-        Quotient = $quotientOut
-        Remainder = $remainderOut
-    }
-}
-
 $pwsh_dzGlyphs = @{
     0 = '0'
     1 = '1'
@@ -39,34 +20,38 @@ $pwsh_dzGlyphs = @{
 }
 
 $pwsh_dzGlyphSets = @(
+    @{  10 = 'X'
+        11 = 'H' },
     @{  10 = 'A'
         11 = 'B' },
-
     @{  10 = 'D'
         11 = 'E' },
-
     @{  10 = 'T'
         11 = 'E' },
-
     @{  10 = 'X'
-        11 = 'E' },
+        11 = 'E' }
+)
 
-    @{  10 = 'X'
-        11 = 'H' }
+$pwsh_dzGlyphSetSelect = @(
+    '^[\dXH]$',
+    '^[\dAB]$',
+    '^[\dDE]$',
+    '^[\dTE]$',
+    '^[\dXE]$'
 )
 
 function cndz {
     [CmdletBinding()]
     param (
-        [parameter(Mandatory=$true, Position=0, ValueFromPipeline)]
+        [parameter(Position = 0, Mandatory, ValueFromPipeline)]
         [int] $Decimal,
+
         [switch] $Suffix
     )
 
     process {
         if ($Decimal -eq 0) {
             $glyphs = "0"
-
         } else {
             $negative = ($Decimal -lt 0)
 
@@ -74,9 +59,9 @@ function cndz {
             $decimalCountdown = $Decimal
 
             while ($decimalCountdown -ne 0) {
-                $step = Get-QuotientAndRemainder -Numerator $decimalCountdown -Denominator 12
-                $valueInts += $step.Remainder
-                $decimalCountdown = $step.Quotient
+                $step = [math]::DivRem($decimalCountdown, 12)
+                $valueInts += $step.Item2
+                $decimalCountdown = $step.Item1
             }
 
             # initialise empty string to avoid creating array
@@ -86,11 +71,14 @@ function cndz {
             for ($i = $valueInts.Length - 1; $i -ge 0; $i--) {
                 $glyphs += $pwsh_dzGlyphs[[Math]::Abs($valueInts[$i])]
             }
-
-            if ($negative) { $glyphs = "-$glyphs" }
+            if ($negative) {
+                $glyphs = "-$glyphs"
+            }
         }
 
-        if ($Suffix) { $glyphs = "${glyphs}z" }
+        if ($Suffix) {
+            $glyphs = "${glyphs}z"
+        }
 
         return $glyphs
     }
@@ -99,7 +87,7 @@ function cndz {
 function cnzd {
     [CmdletBinding()]
     param (
-        [parameter(Mandatory=$true, Position=0, ValueFromPipeline)]
+        [parameter(Position = 0, Mandatory, ValueFromPipeline)]
         [string] $Dozenal
     )
 
@@ -107,21 +95,19 @@ function cnzd {
         # remove any errant z markings
         $zParsed = $Dozenal -replace '[,z\s]',''
 
-        if ($zParsed -like "-*") {
-            $zParsed = $zParsed -replace '-',''
+        if ($zParsed -match "^-") {
+            $zParsed = $zParsed -replace '^-',''
             $negative = $true
         }
 
-        foreach ($set in $pwsh_dzGlyphSets) {
-            $setRegex = "^[0-9$($set[10], $set[11] -join '')]+$"
-
-            if (-not ($zParsed -notmatch $setRegex)) {
-                $setUsed = $set
+        foreach ($set in 0..($pwsh_dzGlyphSetSelect.Count - 1)) {
+            if (-not ($zParsed -notmatch $pwsh_dzGlyphSetSelect[$set])) {
+                $setUsed = $pwsh_zdGlyphSets[$set]
                 break
             }
         }
 
-        if (!$setUsed) {
+        if (-not $setUsed) {
             throw [System.ArithmeticException]::new(
                 "The string $Dozenal could not be converted to a decimal integer. Please use a valid dozenal number format."
             )
@@ -144,7 +130,9 @@ function cnzd {
             $multiplier *= 12
         }
 
-        if ($negative) { $decimalTotal *= -1 }
+        if ($negative) {
+            $decimalTotal *= -1
+        }
 
         return $decimalTotal
     }
@@ -154,8 +142,11 @@ function ztime {
     [CmdletBinding()]
     param (
         [string] $Divider = ":",
+
         [switch] $AmPm,
+
         [switch] $PadHours,
+
         [switch] $Suffix
     )
 
@@ -174,7 +165,6 @@ function ztime {
 
     if ($AmPm) {
         $timeOut = "$($timeHash.ShortHour)$Divider$($timeHash.Minute)$($timeHash.Polarity)"
-
     } else {
         $timeOut = "$($timeHash.Hour)$Divider$($timeHash.Minute)"
     }
@@ -227,4 +217,72 @@ function zdate {
     }
 
     return $dateOut
+}
+
+function ztd {
+    [CmdletBinding()]
+    [OutputType([PSCustomObject])]
+    param (
+        [parameter(Position = 0, ValueFromPipeline)]
+        [datetime] $DateTime = ([datetime]::Now),
+
+        [Alias('dd')]
+        [string] $DateDivider = '-',
+        [Alias('td')]
+        [string] $TimeDivider = ':',
+
+        [switch] $Pad,
+        [switch] $Seconds,
+        [switch] $AmPm
+    )
+
+    process {
+        $dateParts = @()
+        $timeParts = @()
+
+        $dateParts += cndz $DateTime.Year
+        if ($Pad) {
+            $dateParts += (cndz $DateTime.Month).PadLeft(2, '0')
+            $dateParts += (cndz $DateTime.Day).PadLeft(2, '0')
+        } else {
+            $dateParts += cndz $DateTime.Month
+            $dateParts += cndz $DateTime.Day
+        }
+
+        $hour = $DateTime.Hour
+        if ($hour -eq 0) {
+            $hour = 12
+        }
+        if ($AmPm) {
+            $hour = (($hour - 1) % 12) + 1
+            if ($DateTime.Hour -lt 12) {
+                $des = "am"
+            } else {
+                $des = "pm"
+            }
+        } else {
+            $des = ""
+        }
+        if ($Pad) {
+            $timeParts += (cndz $hour).PadLeft(2, '0')
+        } else {
+            $timeParts += cndz $hour
+        }
+        $timeParts += (cndz $DateTime.Minute).PadLeft(2, '0')
+        if ($Seconds) {
+            $timeParts += (cndz $DateTime.Second).PadLeft(2, '0')
+        }
+
+        $outDate = $dateParts -join $DateDivider
+        $outTime = $timeParts -join $TimeDivider
+
+        if ($des) {
+            $outTime = $outTime, $des -join ''
+        }
+
+        return [PSCustomObject]@{
+            Date = $outDate
+            Time = $outTime
+        }
+    }
 }

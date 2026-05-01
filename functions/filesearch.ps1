@@ -1,43 +1,59 @@
 function filesearch {
     param (
         [parameter(Position = 0, Mandatory)]
-        [string] $Pattern
+        [string] $Pattern,
+
+        [Alias('q')]
+        [switch] $Quiet
     )
 
     # set cwd
     $wd = $PWD.Path
     
     # get all files
-    $allFiles = (ls -Recurse -attr !directory)
+    $allFiles = gci -Recurse -attr !directory |? FullName -notmatch '\\\.git(\\|$)'
 
     # narrow down to only tracked files
-    if ((ls -attr !directory).Name -contains '.gitignore') {
+    if ((gci -attr !directory).Name -contains '.gitignore') {
         $ignored = (cat .\.gitignore) -replace '/','\'
+        $ignoredRegex = $ignored |% { "^", [Regex]::Escape(($_ -replace '\\$', '')), "(\\.*)?" -join '' }
+        $script:ignoreOutput = @()
         
-        wr "ignoring:" -f yellow
         $trackedFiles = $allFiles |
             % {
+                # ignore files included in .gitignore
                 $relPath = ($_.FullName.Replace("$wd\",''))
-                $skip = $false
+                $skip = ($relPath -in $ignored)                
                 
-                foreach ($i in $ignored) {
-                    # ignore files included in .gitignore
-                    if ($relPath -like $i -or $relPath -like "$i*") {
-                        wr "  - $relPath" -f yellow
-                        $skip = $true
-                        break
+                if (!$skip) {
+                    foreach ($entry in $ignoredRegex) {
+                        if ($relPath -match $entry) {
+                            $skip = $true
+                            break
+                        }
                     }
                 }
                 
-                if (!$skip) {
+                if ($skip) {
+                    $script:ignoreOutput += $relPath
+                } else {
                     $_
                 }
             }
+        if (!$Quiet -and $script:ignoreOutput) {
+            wr "ignoring:" -f yellow
+            if ($script:ignoreOutput.Count -le 5) {
+                $script:ignoreOutput |% { wr "  $_" -f yellow }
+            } else {
+                $script:ignoreOutput[0..4] |% { wr "  $_" -f yellow }
+                wr "  (... $($script:ignoreOutput.Count - 5) more)" -f yellow
+            }
+        }
+        rv ignoreOutput -Scope Script
+
     } else {
         $trackedFiles = $allFiles
     }
-
-    $trackedFiles = $trackedFiles |? FullName -notmatch '\\\.git\\'
     
     # search tracked files for seach pattern
     foreach ($file in $trackedFiles) {
@@ -52,20 +68,18 @@ function filesearch {
                 $matchText = "$($matches[0])"
                 $escText = (ro-escape $matchText)
                 $replacedLine = [regex]::Replace((ro-escape $line), $escText, ("|@e|$escText|@d|"))
-                $matchingLines.Add("|@p|$linecount. |@d|$replacedLine")
+                $linenum = "$linecount".PadLeft(3)
+                $matchingLines.Add("|@p|$linenum| |@d|$replacedLine")
             }
         }
         
         if ($matchingLines.Count -ge 1) {
-            wr "$relPath " -f white -n
-            wr "- " -f darkgray -n
-            wr "found matches:" -f red
+            ro "|@b|$relPath |@d|- |@red|found matches:"
             $matchingLines | ro -e
             wr ""
             
-        } else {
-            wr "$relPath - " -f darkgray -n
-            wr "no matches" -f green
+        } elseif (!$Quiet) {
+            ro "|@d|$relPath - |@s|no matches"
         }
     }
 }

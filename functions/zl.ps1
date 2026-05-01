@@ -103,14 +103,17 @@ function zl {
                     } elseif ($Item.Length -ge 1GB) {
                         $sizeFormat = $sizeFormat / 1GB
                         $sizeFormat = '{0:N1}' -f $sizeFormat
+                        if ($sizeFormat.Length -gt 5) { $sizeFormat = $sizeFormat -replace '\.\d', '' }
                         $sizeFormat = "|@dred|", "$sizeFormat".PadLeft(5), "G" -join ''
                     } elseif ($Item.Length -ge 1MB) {
                         $sizeFormat = $sizeFormat / 1MB
                         $sizeFormat = '{0:N1}' -f $sizeFormat
+                        if ($sizeFormat.Length -gt 5) { $sizeFormat = $sizeFormat -replace '\.\d', '' }
                         $sizeFormat = "|@dyellow|", "$sizeFormat".PadLeft(5), "M" -join ''
                     } elseif ($Item.Length -ge 1KB) {
                         $sizeFormat = $sizeFormat / 1KB
                         $sizeFormat = '{0:N1}' -f $sizeFormat
+                        if ($sizeFormat.Length -gt 5) { $sizeFormat = $sizeFormat -replace '\.\d', '' }
                         $sizeFormat = "|@|", "$sizeFormat".PadLeft(5), "K" -join ''
                     } else {
                         $sizeFormat = "|@d|", "$sizeFormat".PadLeft(6) -join ''

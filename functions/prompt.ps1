@@ -44,7 +44,8 @@ function prompt {
     Set-PSReadlineOption -ContinuationPrompt "".PadLeft((7 + $pwsh_pMode.Length))
 
     # write ISO date and vertical bar (and wraparound bar!)
-    ro "|@dred|//|@d| $(zdate -div '' -pad)T|@|$(ztime -div '' -PadHours)z|@dred| | " -n
+    $zDateTime = ztd -pad -dd '' -td ''
+    ro "|@dred|//|@d| 0z|@|$($zDateTime.Date)|@d|-|@|$($zDateTime.Time)|@dred| | " -n
 
     # show entire filepath if just changed
     $pwsh_currentPath = $PWD.Path

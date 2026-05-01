@@ -40,6 +40,7 @@ function typecheck {
       Collection = $InputObject -is [System.Collections.ICollection]
       Dictionary = $InputObject -is [System.Collections.IDictionary]
       List = $InputObject -is [System.Collections.IList]
+      Count = $InputObject.Count
       PropertyCount = $InputObject.PSObject.Properties.Name.Count
       Description = ""
     }

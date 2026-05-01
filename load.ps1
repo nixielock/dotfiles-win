@@ -18,15 +18,15 @@ wr "initialising... " -f darkgray -n
 
 # > globals
 # paths
-$pwsh_home            = $env:USERPROFILE
-$pwsh_homeEsc         = $pwsh_home -replace '\\', '\\'
-$pwsh_username        = $pwsh_home -replace '.*\\', ''
-$pwsh_mainpath        = "~\awldrive\Scripts"
-$pwsh_datapath        = "$pwsh_mainpath\data"
-$pwsh_scriptpath      = "$pwsh_mainpath\scripts"
+$pwsh_home       = $env:USERPROFILE
+$pwsh_homeEsc    = $pwsh_home -replace '\\', '\\'
+$pwsh_username   = $pwsh_home -replace '.*\\', ''
+$pwsh_mainpath   = "~\awldrive\powershell"
+$pwsh_datapath   = "$pwsh_mainpath\data"
+$pwsh_scriptpath = "$pwsh_mainpath\scripts"
 # helper vars
-$pwsh_esc         = [char]0x1b
-$pwsh_isAVDHost   = (hostname) -inotmatch '^avd.*'
+$pwsh_esc = [char]0x1b
+$pwsh_isAVDHost = (hostname) -inotmatch '^avd.*'
 $pwsh_ansi = @{
     'black' = "`e[30m"
     'red' = "`e[31m"
@@ -54,7 +54,6 @@ $env:EDITOR = 'hx'
 
 wr "set -> " -f gray -n
 wr "$($pwsh_mainPath.Replace($pwsh_home,'~'))" -f white
-
 #endregion globals
 
 # ---- SETUP ----
@@ -97,7 +96,6 @@ try {
     $profileNoClear = $true
 }
 wr "done" -f green
-
 #endregion setup
 
 # ---- FUNCTIONS ----
@@ -105,43 +103,37 @@ wr "done" -f green
 
 # dot-source functions
 wr "- loading functions... " -f gray
-ls $pwsh_mainPath\functions\*.ps1 |
-    % {
-        $name = $_.Name
-        [Console]::Write("$($pwsh_ansi.brblack)  - $name -> ")
-        try {
-            . $_.FullName
-            [Console]::WriteLine("$($pwsh_ansi.brgreen)loaded$($pwsh_ansi.reset)")
-        } catch {
-            $errLine = $_.InvocationInfo.ScriptLineNumber
-            [Console]::WriteLine("$($pwsh_ansi.brred)failed - issue on line $errLine$($pwsh_ansi.reset)")
-            $profileNoClear = $true
-        }
+foreach ($f in (ls "$pwsh_mainPath\functions\*.ps1")) {
+    [Console]::Write("${ansi_brblack}  - $($f.Name) -> ")
+    try {
+        . $f.FullName
+        [Console]::WriteLine("${ansi_brgreen}loaded${ansi_reset}")
+    } catch {
+        $errLine = $f.InvocationInfo.ScriptLineNumber
+        [Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
+        $profileNoClear = $true
     }
+}
 
 # dot-source unsynced (machine-specific) functions
 if (Test-Path "$pwsh_mainPath\functions-unsynced") {
     wr "- loading unsynced functions... " -f gray
-    ls $pwsh_mainPath\functions-unsynced\*.ps1 |
-        % {
-            $name = $_.Name
-            [Console]::Write("$($pwsh_ansi.brblack)  - $name -> ")
-            try {
-                . $_.FullName
-                [Console]::WriteLine("$($pwsh_ansi.brgreen)loaded$($pwsh_ansi.reset)")
-            } catch {
-                $errLine = $_.InvocationInfo.ScriptLineNumber
-                [Console]::WriteLine("$($pwsh_ansi.brred)failed - issue on line $errLine$($pwsh_ansi.reset)")
-                $profileNoClear = $true
-            }
+    foreach ($f in (ls "$pwsh_mainPath\functions-unsynced\*.ps1")) {
+        [Console]::Write("${ansi_brblack}  - $($f.name) -> ")
+        try {
+            . $f.FullName
+            [Console]::WriteLine("${ansi_brgreen}loaded${ansi_reset}")
+        } catch {
+            $errLine = $f.InvocationInfo.ScriptLineNumber
+            [Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
+            $profileNoClear = $true
         }
+    }
 }
-
-#endregion
+#endregion functions
 
 # ---- EXTERNALS ----
 #region externals
-
 wr "- loading externals... " -f gray -n
 try {
     #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
@@ -151,12 +143,10 @@ try {
     $profileNoClear = $true
 }
 wr "done" -f green
-
-#endregion
+#endregion externals
 
 # ---- CUSTOMISATIONS ----
 #region customisations
-
 wr "- loading ui modificatons... " -f gray -n
 try {
     # change title
@@ -172,18 +162,17 @@ try {
     $profileNoClear = $true
 }
 wr "done" -f green
-
-#endregion
+#endregion customisations
 
 # ---- DIAGNOSTICS ----
 
 # stop timer
 $profileTimer.Stop()
 
-if (!$profileNoClear) {
-    clear
-} else {
+if ($profileNoClear) {
     wr ""
+} else {
+    clear
 }
 
 # display greeting
