@@ -111,7 +111,7 @@ function ro {
 function ro-escape {
     [CmdletBinding()]
     param (
-        [parameter(Position = 0, Mandatory, ValueFromPipeline)]
+        [parameter(Position = 0, ValueFromPipeline)]
         [string] $InputObject
     )
 

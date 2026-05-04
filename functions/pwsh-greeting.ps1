@@ -44,6 +44,12 @@ function pwsh-greeting {
     # display fetch
     if ($Fetch) {
         hyfetch
+    }
+
+    # display todo list
+    todo
+
+    if (-not $pwsh_todo) {
         [Console]::WriteLine()
     }
 }
