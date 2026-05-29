@@ -27,7 +27,7 @@ function delcat {
     }
     
     # display items one by one
-    foreach ($item in (ls -attr !directory)) {
+    foreach ($item in (gci -attr !directory)) {
         $filename = $Item.Name
         
         # preview file contents

@@ -1,5 +1,5 @@
 # zl
-# named for zd - basically just fancy ls
+# named for zd - basically just fancy gci
 
 # item categories and their associated regex
 $pwsh_zlCategories = @(
@@ -144,7 +144,7 @@ function zl {
         ro "|@b|`e[40m $shortPath "
 
         # pre-fetch list of hidden items
-        $allItems = (ls $Path -Force)
+        $allItems = (gci $Path -Force)
         $hiddenItems = $allItems |? Mode -match 'h'
 
         # set whether hidden items are included
@@ -220,3 +220,4 @@ function zl {
 # "alias" function for -All and -LongFormat flags
 function zla { zl -a }
 function zll { zl -l }
+function zlla { zl -a -l }

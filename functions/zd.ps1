@@ -10,7 +10,8 @@ function zd {
         [switch] $All
     )
 
-    cd $Path && $All ? (zla) : (zl)
+    cd $Path -ea Stop
+    $All ? (zla) : (zl)
 }
 
 # "alias" function for -All flag

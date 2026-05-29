@@ -16,7 +16,7 @@ function nav {
 
     if ($List) {
         $outList = @()
-        (ls -path $pwsh_navFolder) |
+        (gci -path $pwsh_navFolder) |
             ? { $_.Extension -eq ".nav" } |
             % {
                 $c = (cat $_.FullName -to 2)

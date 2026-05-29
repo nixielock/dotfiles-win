@@ -1,3 +1,4 @@
+# create global on load to force typing as List<string>
 [System.Collections.Generic.List[string]] $script:pwsh_todo = ((cat "$pwsh_datapath\todo.txt") -as [string[]]) -match '\S'
 
 function todo {
@@ -6,15 +7,27 @@ function todo {
         [parameter(Position = 0, ValueFromPipeline)]
         [string] $Add,
 
+        # no object given so it can be nullable
         [parameter()]
-        $Remove
+        $Remove,
+
+        # open todo list file
+        [switch] $Edit
     )
 
     process {
+        if ($Edit) {
+            ro "opening |@b|todo.txt|@| for editing!"
+            hx "$pwsh_datapath\todo.txt"
+            return
+        }
+
+        # pull current list contents
         $script:pwsh_todo = ((cat "$pwsh_datapath\todo.txt") -as [string[]]) -match '\S'
 
         if ($null -ne $Remove) {
             try {
+                # type validate removal index
                 $Remove = $Remove -as [int]
                 if ($Remove -lt 0) {
                     $Remove = $script:pwsh_todo.Count + $Remove
@@ -54,8 +67,7 @@ function todo {
             return
         }
 
-        # update todo list
-        # display todo list
+        # draw todo list output
         if ($script:pwsh_todo) {
             $len = 0
             foreach ($l in ($script:pwsh_todo -replace $ro_tag, '')) {

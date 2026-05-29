@@ -103,7 +103,7 @@ wr "done" -f green
 
 # dot-source functions
 wr "- loading functions... " -f gray
-foreach ($f in (ls "$pwsh_mainPath\functions\*.ps1")) {
+foreach ($f in (gci "$pwsh_mainPath\functions\*.ps1")) {
     [Console]::Write("${ansi_brblack}  - $($f.Name) -> ")
     try {
         . $f.FullName
@@ -118,7 +118,7 @@ foreach ($f in (ls "$pwsh_mainPath\functions\*.ps1")) {
 # dot-source unsynced (machine-specific) functions
 if (Test-Path "$pwsh_mainPath\functions-unsynced") {
     wr "- loading unsynced functions... " -f gray
-    foreach ($f in (ls "$pwsh_mainPath\functions-unsynced\*.ps1")) {
+    foreach ($f in (gci "$pwsh_mainPath\functions-unsynced\*.ps1")) {
         [Console]::Write("${ansi_brblack}  - $($f.name) -> ")
         try {
             . $f.FullName
@@ -150,7 +150,7 @@ wr "done" -f green
 wr "- loading ui modificatons... " -f gray -n
 try {
     # change title
-    if ((ls $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
+    if ((gci $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
         ni $pwsh_datapath\iteration-counter.txt -val '0'
     }
     $iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)

@@ -9,7 +9,7 @@ function kebabify {
         [string] $Directory = '.'
     )
 
-    foreach ($filename in (ls $Directory -attr !directory).Name) {
+    foreach ($filename in (gci $Directory -attr !directory).Name) {
         wr "$filename -> " -n
         # -- generate new name
         $newName = ($filename -creplace '([a-z])(?=[A-Z])|([A-Z])(?=[A-Z][a-z])','$1$2-').toLower()

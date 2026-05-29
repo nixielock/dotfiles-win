@@ -10,7 +10,7 @@ function rmrf {
     )
 
     if ($Confirm) {
-        $count = (ls $Path -recurse -ea Stop).Count + (ls $Path -recurse -hidden -ea Stop).Count
+        $count = (gci $Path -recurse -ea Stop).Count + (gci $Path -recurse -hidden -ea Stop).Count
         ro "delete |@b|$count items|@|? |@d|[y/N] |@p|> " -n
         if ((Read-Host) -notmatch '[ya]') {
             return

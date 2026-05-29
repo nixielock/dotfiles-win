@@ -85,7 +85,7 @@ function scs {
     wr "..." -n
 
     # fetch file with latest write time
-    $screenshot = (ls $folderpath |? Extension -match '\.(pn|jpe?)g' | sort LastWriteTime)?[-1]
+    $screenshot = (gci $folderpath |? Extension -match '\.(pn|jpe?)g' | sort LastWriteTime)?[-1]
     
     # throw if no screenshots in latest folder
     if (!$screenshot) {
@@ -112,7 +112,7 @@ function scs {
 
 function scs-clear {
     wr "removing screenshot folders older than 3 months!" -f yellow
-    foreach ($folder in (ls $pwsh_screenshotpath |? LastWriteTime -lt ((Get-Date).AddMonths(-3)))) {
+    foreach ($folder in (gci $pwsh_screenshotpath |? LastWriteTime -lt ((Get-Date).AddMonths(-3)))) {
         wr "removing screenshots from $($folder.Name)... " -n
         Remove-Item $folder -Recurse -Force -Confirm:$false -ErrorAction Stop | Out-Null
         wr "done!" -f white

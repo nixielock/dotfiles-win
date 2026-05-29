@@ -14,7 +14,7 @@ function yank {
     }
 
     if ($Path -eq '.\*') {
-        $items = (ls)
+        $items = (gci)
         if ($items.Count -eq 0) {
             ro "|@e|nothing to yank!"
             return

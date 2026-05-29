@@ -1,4 +1,4 @@
-﻿# dozenal.ps1
+# dozenal.ps1
 # contains various functions for conversion between base-10 and base-12 numbers, as well as a time and a date function
 # uses the suffix d for decimal and z for dozenal
 # uses X for 10d and H for 11d by default, but accepts other sets in $pwsh_dzGlyphSets

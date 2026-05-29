@@ -6,7 +6,7 @@ function latest {
         [int] $Count = 1
     )
 
-    $contents = (ls -attr !directory)
+    $contents = (gci -attr !directory)
     if (-not ($contents.Count -ge 1)) {
         Write-Error "current directory doesn't contain any files"
         exit 1
