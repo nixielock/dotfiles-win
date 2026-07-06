@@ -67,7 +67,7 @@ function filesearch {
             if ($line -imatch $Pattern) {
                 $matchText = "$($matches[0])"
                 $escText = (ro-escape $matchText)
-                $replacedLine = [regex]::Replace((ro-escape $line), $escText, ("|@e|$escText|@d|"))
+                $replacedLine = [regex]::Replace((ro-escape $line), [regex]::Escape($escText), ("|@e|$escText|@d|"))
                 $linenum = "$linecount".PadLeft(3)
                 $matchingLines.Add("|@p|$linenum| |@d|$replacedLine")
             }

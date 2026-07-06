@@ -1,4 +1,4 @@
 function cr {
     clear
-    pwsh-greeting -f:$pwsh_isAVDHost -r -c
+    pwsh-greeting -pom -r -c
 }

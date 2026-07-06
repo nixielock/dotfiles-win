@@ -6,8 +6,27 @@ function yank {
     param(
         # path of thing to be yanked
         [parameter(Position = 0)]
-        [string] $Path = ".\*"
+        [string] $Path = ".\*",
+
+        [Alias('Release','c','r')]
+        [switch] $Clear
     )
+
+    if ($Clear) {
+        if ($pwsh_yanked) {
+            $y = (gi $pwsh_yanked -ea Stop)
+            $global:pwsh_yanked = $null
+            if ($y.Count -gt 1) {
+                ro "released $($y.Count) items!"
+            } else {
+                ro "$($y.Name) released!"
+            }
+        } else {
+            $global:pwsh_yanked = $null # force null anyway
+            ro "nothing held to release!"
+        }
+        return
+    }
 
     if ($pwsh_yanked) {
         ro "- currently holding |@w|$pwsh_yanked"

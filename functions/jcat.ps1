@@ -8,7 +8,22 @@ function jcat {
     )
 
     process {
-        # that's it! that's the whole function! :D
-        return (cat -raw $Path | ConvertFrom-Json -Depth 99)
+        try {
+            # that's it! that's the whole function! :D
+            return (ConvertFrom-Json (cat -raw $Path) -Depth 20)
+        } catch {
+            if (-not ($_.Exception.Message -match 'Additional text')) { throw }
+
+            if ((cat -raw $Path) -notmatch '^{.*}\s*$') {
+                $PSCmdlet.ThrowTerminatingError(
+                    [System.Management.Automation.ErrorRecord]::new(
+                        ([System.ArgumentException]"File contents not contained within braces."),
+                        'jcat.MissingOutsideBraces',
+                        [System.Management.Automation.ErrorCategory]::InvalidData,
+                        $Path
+                    )
+                )
+            }
+        }
     }
 }

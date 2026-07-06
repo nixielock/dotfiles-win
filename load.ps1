@@ -26,7 +26,6 @@ $pwsh_datapath   = "$pwsh_mainpath\data"
 $pwsh_scriptpath = "$pwsh_mainpath\scripts"
 # helper vars
 $pwsh_esc = [char]0x1b
-$pwsh_isAVDHost = (hostname) -inotmatch '^avd.*'
 $pwsh_ansi = @{
     'black' = "`e[30m"
     'red' = "`e[31m"
@@ -46,9 +45,14 @@ $pwsh_ansi = @{
     'brwhite' = "`e[97m"
     'reset' = "`e[0m"
 }
+$colorKeys = $pwsh_ansi.Keys -ne 'reset'
+foreach ($key in $colorKeys) {
+    $pwsh_ansi["${key}_bg"] = $pwsh_ansi[$key] -replace '\[3', '[4' -replace '\[9', '[10'
+}
 foreach ($key in $pwsh_ansi.Keys) {
     Set-Variable "ansi_$key" $pwsh_ansi[$key] -Option ReadOnly
 }
+rv colorKeys
 # environment vars
 $env:EDITOR = 'hx'
 
@@ -104,13 +108,14 @@ wr "done" -f green
 # dot-source functions
 wr "- loading functions... " -f gray
 foreach ($f in (gci "$pwsh_mainPath\functions\*.ps1")) {
-    [Console]::Write("${ansi_brblack}  - $($f.Name) -> ")
+    #[Console]::Write("${ansi_brblack}  - $($f.Name) -> ")
     try {
         . $f.FullName
-        [Console]::WriteLine("${ansi_brgreen}loaded${ansi_reset}")
+        #[Console]::WriteLine("${ansi_brgreen}loaded${ansi_reset}")
     } catch {
         $errLine = $f.InvocationInfo.ScriptLineNumber
-        [Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
+        #[Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
+        [Console]::Write("${ansi_brblack}  - $($f.Name) -> ${ansi_brred}failed - issue on line $errLine${ansi_reset}")
         $profileNoClear = $true
     }
 }
@@ -119,13 +124,14 @@ foreach ($f in (gci "$pwsh_mainPath\functions\*.ps1")) {
 if (Test-Path "$pwsh_mainPath\functions-unsynced") {
     wr "- loading unsynced functions... " -f gray
     foreach ($f in (gci "$pwsh_mainPath\functions-unsynced\*.ps1")) {
-        [Console]::Write("${ansi_brblack}  - $($f.name) -> ")
+        #[Console]::Write("${ansi_brblack}  - $($f.name) -> ")
         try {
             . $f.FullName
-            [Console]::WriteLine("${ansi_brgreen}loaded${ansi_reset}")
+            #[Console]::WriteLine("${ansi_brgreen}loaded${ansi_reset}")
         } catch {
             $errLine = $f.InvocationInfo.ScriptLineNumber
-            [Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
+            #[Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
+            [Console]::Write("${ansi_brblack}  - $($f.Name) -> ${ansi_brred}failed - issue on line $errLine${ansi_reset}")
             $profileNoClear = $true
         }
     }
@@ -153,11 +159,11 @@ try {
     if ((gci $pwsh_datapath).Name -notcontains 'iteration-counter.txt') {
         ni $pwsh_datapath\iteration-counter.txt -val '0'
     }
-    $iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
-    $iterationCount++
-    Out-File -filepath "$pwsh_datapath\iteration-counter.txt" -inputobject $iterationCount
+    $global:pwsh_iterationCount = [int](Get-Content -path $pwsh_datapath\iteration-counter.txt -totalcount 1)
+    $global:pwsh_iterationCount++
+    Out-File -filepath "$pwsh_datapath\iteration-counter.txt" -inputobject $global:pwsh_iterationCount
 
-    $host.ui.RawUI.WindowTitle = "spellbook open | pg. $(cndz $iterationCount)z"
+    $host.ui.RawUI.WindowTitle = "spellbook open | pg. 0z$(cndz $global:pwsh_iterationCount)"
 } catch {
     $profileNoClear = $true
 }
@@ -176,7 +182,7 @@ if ($profileNoClear) {
 }
 
 # display greeting
-pwsh-greeting $profileTimer.Elapsed.TotalSeconds -f:$pwsh_isAVDHost -c
+pwsh-greeting $profileTimer.Elapsed.TotalSeconds -pom -c
 
 # cleanup profile variables
-rv profileTimer, iterationCount, profileNoClear
+rv profileTimer, profileNoClear

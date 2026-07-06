@@ -1,5 +1,4 @@
 # ahks
-# load the function globally when script is called
 
 function ahks {
     [CmdletBinding()]
@@ -9,8 +8,11 @@ function ahks {
 		[parameter(Position = 1, Mandatory)]
 		[string] $Replacement
 	)
-    # function body
+
+	$replacementPath = "~\awldrive\.config\ahk\quick-replacements.ahk"
 	$entry = "::#$HotString`::$Replacement"
-    Add-Content -Path "~\awldrive\.config\ahk\quick-replacements.ahk" -Value $entry
-	ro "|@s|added line to config: |@ white|$entry"
+    Add-Content -Path $replacementPath -Value $entry
+	ro "|@s|added line to config: " -n
+	wr "$entry" -f white
+	& $replacementPath
 }

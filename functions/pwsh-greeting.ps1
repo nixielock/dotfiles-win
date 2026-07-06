@@ -10,6 +10,8 @@ function pwsh-greeting {
         [switch] $ShiftCursor,
         [Alias('f')]
         [switch] $Fetch,
+        [Alias('m','pom')]
+        [switch] $MoonPhase,
         [Alias('cr','r')]
         [switch] $Refresh
     )
@@ -21,34 +23,47 @@ function pwsh-greeting {
     
     # output header
     if ($Refresh) {
-        $msg = " the spellbook is open - the ritual is renewed "
+        $msgTop = " |@blue|spellbook open "
+        $msgSub = " page |@b|0z$(cndz $global:pwsh_iterationCount)|@| "
     } else {
-        $msg = " spellbook opened - ritual performed in |@b|$([math]::Round($Elapsed,3)) |@|seconds "
+        $msgTop = " |@blue|spellbook opened "
+        $msgSub = " ritual performed in |@b|$([math]::Round($Elapsed,3)) |@|seconds "
     }
-
-    # moon phase
-    
 
     if ($Center) {
         # get console centre
         $consoleCentre = $Host.UI.RawUI.BufferSize.Width / 2
-        $msgLength = ($msg -replace $pwsh_roFormatTag,'').Length
-        $padding = ''.PadLeft($consoleCentre - [int]($msgLength / 2))
-        wr "$padding" -n
-    }    
-    
-    wr "✨" -n
-    ro "$msg" -n
+        $msgTopLen = ($msgTop -replace $pwsh_roFormatTag,'').Length
+        $msgSubLen = ($msgSub -replace $pwsh_roFormatTag,'').Length
+        $paddingTop = ''.PadLeft($consoleCentre - [int]($msgTopLen / 2) - 1)
+        $paddingSub = ''.PadLeft($consoleCentre - [int]($msgSubLen / 2))
+    } else {
+        $paddingTop = ''
+        $paddingSub = ''
+    }
+
+    wr "${paddingTop}✨" -n
+    ro "$msgTop" -n
     wr "✨"
+    ro "${paddingSub}$msgSub"
     
     # display fetch
     if ($Fetch) {
-        hyfetch
+        # no more hyfetch :c
+        # TODO: make my own fetch at some point!
+        # windows logo art is saved in $pwsh_datapath\windows_ascii.txt
+    }
+
+    # moon phase
+    if ($MoonPhase) {
+        $phase = moonphase
+        wr "  $($phase.Icon)" -f White -n
+        ro "  $($phase.Phase.ToLower()) |@d|($([int] ($phase.Illuminated * 100))%)"
     }
 
     # display todo list
+    # need to init $pwsh_todo before checking it (by running todo)
     todo
-
     if (-not $pwsh_todo) {
         [Console]::WriteLine()
     }

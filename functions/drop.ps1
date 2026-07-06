@@ -16,6 +16,6 @@ function drop {
     } else {
         mv $pwsh_yanked . -ea Stop
         ro "|@s|$($pwsh_yanked -replace '.*\\', '') dropped!"
-        $global:pwsh_yanked = ""
+        $global:pwsh_yanked = $null
     }
 }
