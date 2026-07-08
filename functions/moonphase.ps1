@@ -81,7 +81,7 @@ function moonphase {
                 [parameter(Position = 0, Mandatory, ValueFromPipeline)]
                 [decimal] $Degrees
             )
-            return ([math]::DivRem($Degrees, 360).Item2 + 360) % 360
+            return (($Degrees % 360) + 360) % 360
         }
 
         function inverseKepler { 
@@ -94,7 +94,7 @@ function moonphase {
                 [decimal] $Eccentricity
             )
             # use Newton's method to sufficient precision
-            $epsilon = [math]::Pow(10, -6)
+            [decimal] $epsilon = 10e-6
             $meanAnomaly = (toRadians $Degrees)
             [decimal] $e = $meanAnomaly # set eccentric anomaly to initial value
             do {
@@ -137,7 +137,7 @@ function moonphase {
             # > solar calculations
 
             # mean anomaly
-            [decimal] $s_n = (fixAngle ((360 / ([decimal] 365.2422)) * $day)) # 360 degrees per year since epoch
+            [decimal] $s_n = (fixAngle ((360 / 365.2422) * $day)) # 360 degrees per year since epoch
             [decimal] $s_mAnomaly = fixAngle ($s_n + $S_ELong0 - $S_ELongP) # mean anomaly
             # eccentric anomaly
             [decimal] $eccenAnomaly = (inverseKepler $s_mAnomaly $E_Eccen)
@@ -162,25 +162,25 @@ function moonphase {
             # ascending node mean longitude
             $l_mLongNAsc = fixAngle ($L_MLongN0 - (([decimal] 0.0529539) * $day))
             # evection (lunar inequality)
-            $l_evec = ([decimal] 1.2739) * (radSin ((2 * ($l_mLong - $s_lambda)) - $l_mAnomaly))
+            $l_evec = 1.2739 * (radSin ((2 * ($l_mLong - $s_lambda)) - $l_mAnomaly))
             # annual equation (lunar inequality)
-            $l_annualEq = ([decimal] 0.1858) * (radSin $s_mAnomaly)
+            $l_annualEq = 0.1858 * (radSin $s_mAnomaly)
             # correction term
-            $l_c3 = ([decimal] 0.37) * (radSin $s_mAnomaly)
+            $l_c3 = 0.37 * (radSin $s_mAnomaly)
             # corrected anomaly
             $l_cAnomaly = $l_mAnomaly + $l_evec - $l_annualEq - $l_c3
             # equation of the centre (lunar inequality)
-            $l_centreEq = ([decimal] 6.2886) * (radSin $l_cAnomaly)
+            $l_centreEq = 6.2886 * (radSin $l_cAnomaly)
             # "another correction term"
-            $l_c4 = ([decimal] 0.214) * (radSin (2 * $l_cAnomaly))
+            $l_c4 = 0.214 * (radSin (2 * $l_cAnomaly))
             # corrected longitude
             $l_cLong = $l_mLong + $l_evec + $l_centreEq - $l_annualEq + $l_c4
             # variation
-            $l_var = ([decimal] 0.6583) * (radSin (2 * ($l_cLong - $s_lambda)))
+            $l_var = 0.6583 * (radSin (2 * ($l_cLong - $s_lambda)))
             # true longitude
             $l_trueLong = $l_cLong + $l_var
             # corrected longitude of the node
-            $l_nLongC = $l_mLongNAsc - (([decimal] 0.16) * (radSin $s_mAnomaly))
+            $l_nLongC = $l_mLongNAsc - (0.16 * (radSin $s_mAnomaly))
             # ! originally LambdaMoon - is calculated but never actually used
             # y inclination coordinate
             #$incY = (radSin ($l_trueLong - $l_nLongC)) * (radCos $L_Inclin)
