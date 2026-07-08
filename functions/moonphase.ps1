@@ -27,7 +27,9 @@ function moonphase {
 
     begin {
         $KnownNewMoon = (Get-Date "20:35 29 Jan 2025 +8:00")
-        $KnownEpoch = (Get-Date "00:00 31 Dec 1979 +0:00") # 00:00 1 January 1980
+        # original code from Astro::MoonPhase says 00:00 1 January 1980
+        # but the julian date provided is one day earlier for some reason?
+        $KnownEpoch = (Get-Date "00:00 31 Dec 1979 +0:00")
 
         # constants for sun's apparent orbit
         [decimal] $S_ELong0 = 278.833540; # ecliptic longitude of the Sun at epoch
