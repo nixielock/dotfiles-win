@@ -1,9 +1,11 @@
 # ---- prompt - replace the default powershell prompt!
 
 # set variables for prompt
+$global:pwsh_pGit = $false
 $script:pwsh_previousPath = ""
 $pwsh_pColor = ""
 $pwsh_pMode = ""
+$pwsh_pLen = 0
 $pwsh_isAdmin = ([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544"
 
 # define prompt function
@@ -14,34 +16,39 @@ function prompt {
         { $pwsh_isAdmin } {
             $pwsh_pColor = "|@w|"
             $pwsh_pMode = "admin"
+            $pwsh_pLen = 12
             break
         }
         # connected to EXO
         { $pwsh_exoActive } {
             $pwsh_pColor = "|@p|"
             $pwsh_pMode = "exo"
+            $pwsh_pLen = 10
             break
         }
         # connected to on-prem
         { $pwsh_opexActive } {
             $pwsh_pColor = "|@dcyan|"
             $pwsh_pMode = "opex"
+            $pwsh_pLen = 11
             break
         }
         # connected to graph
         { $pwsh_graphActive } {
             $pwsh_pColor = "|@s|"
             $pwsh_pMode = "graph"
+            $pwsh_pLen = 12
             break
         }
         # none of the above
         default {
             $pwsh_pColor = "|@d|"
             $pwsh_pMode = "pwsh"
+            $pwsh_pLen = 11
         }
     }
 
-    Set-PSReadlineOption -ContinuationPrompt "".PadLeft((7 + $pwsh_pMode.Length))
+    Set-PSReadlineOption -ContinuationPrompt "".PadLeft($pwsh_pLen)
 
     # write ISO date and vertical bar (and wraparound bar!)
     $zDateTime = ztd -pad -dd '' -td ''
@@ -65,11 +72,13 @@ function prompt {
     }
 
     # show git output if inside a git repo
-    if ($toplevel = (git rev-parse --show-toplevel 2>$null)) {
-        $reponame = $toplevel -replace ('.*/','')
-        $repobranch = (git branch --show-current 2>$null)
+    if ($pwsh_pGit) {
+        if ($toplevel = (git rev-parse --show-toplevel 2>$null)) {
+            $reponame = $toplevel -replace ('.*/','')
+            $repobranch = (git branch --show-current 2>$null)
         
-        ro "|@p| | |@|$reponame/|@b|$repobranch" -n
+            ro "|@p| | |@|$reponame/|@b|$repobranch" -n
+        }
     }
     [Console]::WriteLine()
 

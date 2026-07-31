@@ -225,13 +225,9 @@ function moonphase {
     }
 
     process {
-        $prev = $Date.AddHours(-6)
-
         $dayOutput = (pom $Date)
-        $prevOutput = (pom $prev)
 
-        $phaseStatus = (($dayOutput.Illuminated -gt $prevOutput.Illuminated) ? "Waxing" : "Waning")
-
+        $phaseStatus = $dayOutput.Age -lt ($SynodicMonth / 2) ? "Waxing" : "Waning"
         $phase = switch ($dayOutput.Illuminated) {
             { $_ -ge 0.999 } { "Full Moon"; break }
             { $_ -ge 0.53 } { "$phaseStatus Gibbous"; break }
@@ -272,6 +268,41 @@ function moonphase {
     }
 }
 
-function pom {
-    moonphase -p
+# phasehunt - get the date of the next full moon
+function phasehunt {
+    [CmdletBinding()]
+    param (
+        [parameter(Position = 0, ValueFromPipeline)]
+        [datetime] $Date = [datetime]::Now
+    )
+
+    begin {
+        $KnownNewMoon = (Get-Date "20:35 29 Jan 2025 +8:00")
+        [decimal] $SynodicMonth = 29.53058868
+        [decimal] $SynHalf = $SynodicMonth / 2
+        [decimal] $Epsilon = 0.0005 # within 1 minute
+    }
+
+    process {
+        $day = ($Date - $KnownNewMoon).TotalDays
+        [decimal] $delta = $SynHalf - ($day % $SynodicMonth)
+        if ($delta -ge 0) { # waxing
+            $guess = $Date.AddDays($delta)
+        } else { # waning
+            $guess = $Date.AddDays(($delta + $SynodicMonth))
+        }
+        $nextPhase = moonphase $guess
+
+        $tries = 0
+        while ([math]::Abs(($SynHalf - $nextPhase.Age)) -gt $Epsilon) {
+            if ($tries -gt 20) { throw "Full moon not found after 20 iterations" }
+            [decimal] $delta = $SynHalf - $nextPhase.Age
+            $guess = $guess.AddDays(($delta * 0.99))
+            $nextPhase = moonphase $guess
+            $tries++
+        }
+
+        Write-Debug "reached result after $tries tries"
+        return $guess
+    }
 }

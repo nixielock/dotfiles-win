@@ -22,7 +22,7 @@ function reparse {
     }
 
     process {
-        $pathItem = (gi $Path -ea Stop)
+        $pathItem = (gi $Path -Force -ea Stop)
 
         if (-not ($pathItem |? $rpFilter)) {
             ro "|@w|path is not a reparse point!"
@@ -39,7 +39,7 @@ function reparse {
                 }
                 if (-not ($par.Parent |? $rpFilter)) {
                     Write-Warning "base reparse point has no target (likely a cloud directory)"
-                    $pathItem = gi ($par.FullName, $reappend -join "")
+                    $pathItem = gi ($par.FullName, $reappend -join "") -Force
                     break reparsing
                 }
 
@@ -50,10 +50,10 @@ function reparse {
             }
 
             # get target from current level of tree
-            $target = (gi $par.Target)
+            $target = (gi $par.Target -Force)
             Write-Debug "Item $($par.Name) has target path '$($target.FullName)'"
             if (-not ($target |? $rpFilter)) {
-                $pathItem = gi ($target.FullName, $reappend -join "")
+                $pathItem = gi ($target.FullName, $reappend -join "") -Force
                 break reparsing
             }
 
@@ -65,7 +65,7 @@ function reparse {
             }
             if (-not ($target.Parent |? $rpFilter)) {
                 Write-Warning "base reparse point has no target (likely a cloud directory)"
-                $pathItem = gi ($target.FullName, $reappend -join "")
+                $pathItem = gi ($target.FullName, $reappend -join "") -Force
                 break reparsing
             }
             $reappend = "\$($target.Name)", $reappend -join ""
