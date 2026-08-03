@@ -260,20 +260,6 @@
                 "useAcrylic": false
             },
             {
-                "bellStyle": "none",
-                "colorScheme": "Campbell Powershell",
-                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-                "font": 
-                {
-                    "face": "Fira Code",
-                    "size": 10,
-                    "weight": "medium"
-                },
-                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                "hidden": false,
-                "name": "Windows PowerShell"
-            },
-            {
                 "colorScheme": "Later This Evening Redux",
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
                 "font": 
@@ -283,9 +269,19 @@
                     "weight": "medium"
                 },
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-                "hidden": false,
+                "hidden": true,
                 "intenseTextStyle": "bold",
                 "name": "Command Prompt"
+            },
+            {
+                "antialiasingMode": "cleartype",
+                "colorScheme": "One Half Dark",
+                "commandline": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -nologo",
+                "guid": "{7c40edf9-b0df-44b2-9824-f2b6d3498db4}",
+                "hidden": false,
+                "icon": null,
+                "name": "Windows PowerShell",
+                "startingDirectory": "%USERPROFILE%"
             }
         ]
     },

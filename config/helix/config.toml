@@ -5,6 +5,7 @@ line-number = "relative"
 mouse = false
 bufferline = "multiple"
 shell = ["pwsh","-c"]
+end-of-line-diagnostics = "hint"
 
 [editor.soft-wrap]
 enable = true
@@ -26,9 +27,13 @@ hidden = false
 mode.normal = "   NORMAL   "
 mode.insert = "-- INSERT --"
 mode.select = ">> SELECT <<"
-left = ["spacer","mode","read-only-indicator","register","selections","spinner","diagnostics"]
-center = ["primary-selection-length","spacer","spacer","spacer","position"]
-right = ["version-control","file-modification-indicator","file-name","position-percentage","spacer"]
+left = ["mode","read-only-indicator","register","selections","spinner","diagnostics"]
+center = ["primary-selection-length","spacer","spacer","spacer","spacer","position","separator","spacer","position-percentage"]
+right = ["file-modification-indicator","file-name","separator","file-encoding","file-line-ending"]
+
+[editor.inline-diagnostics]
+cursor-line = "error"
+other-lines = "error"
 
 [keys.normal]
   # tweaks
@@ -36,6 +41,8 @@ a = ["append_mode", "collapse_selection"]
 i = ["insert_mode", "collapse_selection"]
 C-q = "record_macro"
 q = "replay_macro"
+  # multiline select (replaces C)
+C-s = "copy_selection_on_next_line"
   # line selections
 x = "extend_line_below"
 X = "extend_line_above"
@@ -50,8 +57,9 @@ A-q = ["move_prev_sub_word_start","move_next_sub_word_end"]
 L = "extend_to_line_end"
 H = "extend_to_first_nonwhitespace"
   # delete line
-D = ["extend_to_line_bounds", "delete_selection"]
-A-D = ["extend_to_line_bounds", "change_selection", "normal_mode"] 
+D = ["extend_to_line_bounds", "delete_selection"] 
+  # change line
+C = ["extend_to_line_bounds", "change_selection"]
   # move line up/down
 C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"] 
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
