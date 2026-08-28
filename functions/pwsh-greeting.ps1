@@ -56,9 +56,8 @@ function pwsh-greeting {
 
     # moon phase
     if ($MoonPhase) {
-        $phase = moonphase
-        wr "  $($phase.Icon)" -f White -n
-        ro "  $($phase.Phase.ToLower()) |@d|($([math]::Round(($phase.Illuminated * 100), 1))%)"
+        wr "  " -n
+        rophase
     }
 
     # display todo list

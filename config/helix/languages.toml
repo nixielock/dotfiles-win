@@ -1,0 +1,11 @@
+# [[language]]
+# name = "pwsh"
+# scope = "source.ps1"
+# roots = [".git"]
+# file-types = ["ps1"]
+# indent = { tab-width = 4, unit = " " }
+# language-servers = [ "powershell-editor-services" ]
+
+# [language-server.powershell-editor-services]
+# command = "pwsh"
+# args = [ "-NoLogo", "-NoProfile", "-Command", 'C:\Users\EZ004876\AppData\Roaming\helix\language-servers\pwsh\PowerShellEditorServices\Start-EditorServices.ps1 -BundledModulesPath C:\Users\EZ004876\AppData\Roaming\helix\language-servers\pwsh -SessionDetailsPath C:\Users\EZ004876\AppData\Roaming\helix\language-servers\pwsh\pwsh.sessions.json -LogPath C:\Users\EZ004876\AppData\Roaming\helix\language-servers\pwsh\pwsh.log -FeatureFlags @() -AdditionalModules @() -HostName helix -HostProfileId 0 -HostVersion 1.0.0 -Stdio -LogLevel Normal' ]

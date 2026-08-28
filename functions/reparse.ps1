@@ -13,7 +13,7 @@ function reparse {
         [int] $Depth = 4,
 
         [parameter()]
-        [Alias('go')]
+        [Alias('go', 'cd')]
         [switch] $ChangeDirectory
     )
 

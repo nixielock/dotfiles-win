@@ -2,7 +2,7 @@
 
 # measure profile build time
 $profileTimer = [System.Diagnostics.Stopwatch]::StartNew()
-$profileNoClear = $false
+$global:profileNoClear = $false
 
 # ---- GLOBALS ----
 #region globals
@@ -97,7 +97,7 @@ try {
     # set directory formatting
     $PSStyle.FileInfo.Directory = "`e[107;30m"
 } catch {
-    $profileNoClear = $true
+    $global:profileNoClear = $true
 }
 wr "done" -f green
 #endregion setup
@@ -116,7 +116,7 @@ foreach ($f in (gci "$pwsh_mainPath\functions\*.ps1")) {
         $errLine = $f.InvocationInfo.ScriptLineNumber
         #[Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
         [Console]::Write("${ansi_brblack}  - $($f.Name) -> ${ansi_brred}failed - issue on line $errLine${ansi_reset}")
-        $profileNoClear = $true
+        $global:profileNoClear = $true
     }
 }
 
@@ -132,7 +132,7 @@ if (Test-Path "$pwsh_mainPath\functions-unsynced") {
             $errLine = $f.InvocationInfo.ScriptLineNumber
             #[Console]::WriteLine("${ansi_brred}failed - issue on line $errLine${ansi_reset}")
             [Console]::Write("${ansi_brblack}  - $($f.Name) -> ${ansi_brred}failed - issue on line $errLine${ansi_reset}")
-            $profileNoClear = $true
+            $global:profileNoClear = $true
         }
     }
 }
@@ -146,7 +146,7 @@ try {
     Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
     #f45873b3-b655-43a6-b217-97c00aa0db58
 } catch {
-    $profileNoClear = $true
+    $global:profileNoClear = $true
 }
 wr "done" -f green
 #endregion externals
@@ -165,7 +165,7 @@ try {
 
     $host.ui.RawUI.WindowTitle = "spellbook open | pg. 0z$(cndz $global:pwsh_iterationCount)"
 } catch {
-    $profileNoClear = $true
+    $global:profileNoClear = $true
 }
 wr "done" -f green
 #endregion customisations
@@ -175,7 +175,7 @@ wr "done" -f green
 # stop timer
 $profileTimer.Stop()
 
-if ($profileNoClear) {
+if ($global:profileNoClear) {
     wr ""
 } else {
     clear
