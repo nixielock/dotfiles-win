@@ -2,6 +2,7 @@
 
 # set variables for prompt
 $global:pwsh_pGit = $false
+$global:pwsh_pBreak = $false
 $script:pwsh_previousPath = ""
 $pwsh_pColor = ""
 $pwsh_pMode = ""
@@ -49,6 +50,11 @@ function prompt {
     }
 
     Set-PSReadlineOption -ContinuationPrompt "".PadLeft($pwsh_pLen)
+
+    # add bonus linebreak before prompt
+    if ($global:pwsh_pBreak) {
+        [Console]::WriteLine()
+    }
 
     # write ISO date and vertical bar (and wraparound bar!)
     $zDateTime = ztd -pad -dd '' -td ''
