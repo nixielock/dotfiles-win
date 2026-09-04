@@ -1,5 +1,4 @@
-# ConvertTo-ParameterSplat
-# load the function globally when script is called
+# splat - convert long invocations to splatted invocations!
 
 function splat {
 	[CmdletBinding()]
@@ -15,7 +14,8 @@ function splat {
         # -- SETUP
 
         # split by param names
-        $invocationSplit = $LiteralInvocation -split ' -' |?ne
+        [string[]] $invocationSplit = $LiteralInvocation -split '(?<!\S+( "[^"]+| \{[^\}]+| \([^\)]+)) -'
+        $invocationSplit = $invocationSplit -match '\S'
     
         # manage first positional param
         if ($invocationSplit[0] -match '^[a-z\d\-]+ (?<pos>.+)$') {
@@ -63,7 +63,7 @@ function splat {
                 $paramValue = '$true'
 
             # add quotes if parameter isn't quoted and isn't a variable, hashtable, etc.
-            } elseif (-not ($paramValue[0] -match "[\$\`"\'\(]|@[\{\(]")) {
+            } elseif (-not ($paramValue[0] -match "[\$\`"\'\(\{]|@[\{\(]")) {
                 $paramValue = "`"$paramValue`""
             }
 
