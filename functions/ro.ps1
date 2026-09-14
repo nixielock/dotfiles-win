@@ -80,29 +80,37 @@ function ro {
 
         # don't insert an ansi reset sequence at the end of the output
         [Alias('k')]
-        [switch] $NoReset
+        [switch] $NoReset,
+
+        # strip ro tags but don't apply any formatting
+        [Alias('NoColour', 'nc', 'nf')]
+        [switch] $NoColor
     )
 
     process {
-        # split input string into a section for each tag
-        $splits = $InputObject -split "(?=$ro_tag)"
-        # replace tags with corresponding ansi sequence
-        $outSplits = foreach ($section in $splits) {
-            $capture = $section -replace "$ro_captureTag.*", '$1'
-            if ($capture -notmatch ';') {
-                $seq = $ro_keys[$capture]
-            } else {
-                $mode, $capture = $capture -split ';'
-                $seq = switch ($mode) {
-                    'b' { $ro_keys_bg[$capture]; break }
-                    'r' { if ($capture -match $ro_8bitNum) { "$([char]0x1b)[38;5;${capture}m" }; break }
-                    'rb' { if ($capture -match $ro_8bitNum) { "$([char]0x1b)[48;5;${capture}m" }; break }
-                    default { $ro_keys[$capture] }
+        if ($NoColor) {
+            $outString = $InputObject -replace $ro_tag, ''
+        } else {
+            # split input string into a section for each tag
+            $splits = $InputObject -split "(?=$ro_tag)"
+            # replace tags with corresponding ansi sequence
+            $outSplits = foreach ($section in $splits) {
+                $capture = $section -replace "$ro_captureTag.*", '$1'
+                if ($capture -notmatch ';') {
+                    $seq = $ro_keys[$capture]
+                } else {
+                    $mode, $capture = $capture -split ';'
+                    $seq = switch ($mode) {
+                        'b' { $ro_keys_bg[$capture]; break }
+                        'r' { if ($capture -match $ro_8bitNum) { "$([char]0x1b)[38;5;${capture}m" }; break }
+                        'rb' { if ($capture -match $ro_8bitNum) { "$([char]0x1b)[48;5;${capture}m" }; break }
+                        default { $ro_keys[$capture] }
+                    }
                 }
+                $section -replace $ro_tag, $seq
             }
-            $section -replace $ro_tag, $seq
+            $outString = $outSplits -join ''
         }
-        $outString = $outSplits -join ''
 
         # replace escaped ro tags with original tags
         if ($Escape) {

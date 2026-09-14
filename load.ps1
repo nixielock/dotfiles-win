@@ -140,15 +140,15 @@ if (Test-Path "$pwsh_mainPath\functions-unsynced") {
 
 # ---- EXTERNALS ----
 #region externals
-wr "- loading externals... " -f gray -n
-try {
-    #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
-    Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
-    #f45873b3-b655-43a6-b217-97c00aa0db58
-} catch {
-    $global:profileNoClear = $true
-}
-wr "done" -f green
+# wr "- loading externals... " -f gray -n
+# try {
+#     #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
+#     Import-Module -Name Microsoft.WinGet.CommandNotFound -ea SilentlyContinue
+#     #f45873b3-b655-43a6-b217-97c00aa0db58
+# } catch {
+#     $global:profileNoClear = $true
+# }
+# wr "done" -f green
 #endregion externals
 
 # ---- CUSTOMISATIONS ----

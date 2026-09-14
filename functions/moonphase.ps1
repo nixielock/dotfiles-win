@@ -32,25 +32,25 @@ function moonphase {
         $KnownEpoch = (Get-Date "00:00 31 Dec 1979 +0:00")
 
         # constants for sun's apparent orbit
-        [decimal] $S_ELong0 = 278.833540; # ecliptic longitude of the Sun at epoch
-        [decimal] $S_ELongP = 282.553; # ecliptic longitude of the perihelion at epoch
-        [decimal] $E_Eccen = 0.016712;   # eccentricity of Earth's orbit at epoch
-        [decimal] $S_KmSmAxis = 1.495985e8; # semi-major axis of Earth's orbit (km)
-        [decimal] $S_DegSmAxis = 0.533128;   # sun's angular size (deg) at semi-major axis distance
+        [decimal] $S_ELong0 = 278.833540;      # ecliptic longitude of the Sun at epoch
+        [decimal] $S_ELongP = 282.553;         # ecliptic longitude of the perihelion at epoch
+        [decimal] $E_Eccen = 0.016712;         # eccentricity of Earth's orbit at epoch
+        [decimal] $S_KmSmAxis = 1.495985e8;    # semi-major axis of Earth's orbit (km)
+        [decimal] $S_DegSmAxis = 0.533128;     # sun's angular size (deg) at semi-major axis distance
 
         # constants for moon's orbit
-        [decimal] $L_MLong0 = 64.975464;   # moon's mean longitude at epoch
-        [decimal] $L_MLongP0 = 349.383063;  # mean longitude of the perigee at epoch
-        [decimal] $L_MLongN0 = 151.950429;  # mean longitude of the node at epoch
-        [decimal] $L_Inclin = 5.145396;    # inclination of the Moon's orbit
-        [decimal] $L_Eccen = 0.054900;    # eccentricity of the Moon's orbit
-        [decimal] $L_AngDeg = 0.5181;      # moon's angular size at distance a from Earth
-        [decimal] $L_KmSmAxis = 384401.0;    # semi-major axis of Moon's orbit (km)
+        [decimal] $L_MLong0 = 64.975464;       # moon's mean longitude at epoch
+        [decimal] $L_MLongP0 = 349.383063;     # mean longitude of the perigee at epoch
+        [decimal] $L_MLongN0 = 151.950429;     # mean longitude of the node at epoch
+        [decimal] $L_Inclin = 5.145396;        # inclination of the Moon's orbit
+        [decimal] $L_Eccen = 0.054900;         # eccentricity of the Moon's orbit
+        [decimal] $L_AngDeg = 0.5181;          # moon's angular size at distance a from Earth
+        [decimal] $L_KmSmAxis = 384401.0;      # semi-major axis of Moon's orbit (km)
         # ! nothing to do with parallax is ultimately used anywhere in the original source code
-        #[decimal] $L_Parallax = 0.9507;      # parallax at distance a from Earth
+        #[decimal] $L_Parallax = 0.9507;        # parallax at distance a from Earth
         [decimal] $SynodicMonth = 29.53058868; # synodic month (new moon to new moon)
 
-        # long pi
+        # force decimal pi
         [decimal] $Pi = [math]::Pi # assuming not near a black hole nor in Tennessee
 
         # base functions
@@ -94,7 +94,7 @@ function moonphase {
                 [decimal] $Eccentricity
             )
             # use Newton's method to sufficient precision
-            [decimal] $epsilon = 10e-6
+            [decimal] $epsilon = 10e-8
             $meanAnomaly = (toRadians $Degrees)
             [decimal] $e = $meanAnomaly # set eccentric anomaly to initial value
             do {
@@ -148,7 +148,7 @@ function moonphase {
             # geocentric ecliptic longitude
             [decimal] $s_lambda = (fixAngle ($trueAnomaly + $S_ELongP))
             # orbital factor
-            [decimal] $orbitFactor = (1 + ($E_Eccen * (radCos $trueAnomaly))) / (1 - [math]::Pow($E_Eccen, 2))
+            [decimal] $orbitFactor = (1 + ($E_Eccen * (radCos $trueAnomaly))) / (1 - ($E_Eccen * $E_Eccen))
             # distance and angular size
             [decimal] $s_distance = $S_KmSmAxis / $orbitFactor # distance to sun (km)
             [decimal] $s_angSize = $S_DegSmAxis * $orbitFactor # sun's angular size (deg)
@@ -200,7 +200,7 @@ function moonphase {
             # illuminated fraction
             $illum = (1 - (radCos $l_ageDeg)) / 2
             # distance from centre of earth
-            $denom = $L_KmSmAxis * (1 - [math]::Pow($L_Eccen, 2))
+            $denom = $L_KmSmAxis * (1 - ($L_Eccen * $L_Eccen))
             $recip = 1 + ($L_Eccen * (radCos ($l_cAnomaly + $l_centreEq)))
             $l_distance = $denom / $recip
             Remove-Variable denom, recip

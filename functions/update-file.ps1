@@ -39,7 +39,7 @@ function update-file {
         
         # no existing target, add
         if ($targetObject.GetType().Name -eq 'String') {
-            cp $fileObject $Target
+            cp $fileObject $Target -ea Stop
             wr "created $((gi $Target -ea Stop).FullName)" -f green
             return ($ReturnStatus ? 'added' : $null)
         }

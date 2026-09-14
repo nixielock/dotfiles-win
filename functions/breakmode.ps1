@@ -1,10 +1,10 @@
 function breakmode {
     if ($global:pwsh_pBreak) {
         $global:pwsh_pBreak = $false
-        Set-PSReadLineOption -ExtraPromptLineCount 2
+        Set-PSReadLineOption -ExtraPromptLineCount 1
     } else {
         $global:pwsh_pBreak = $true
-        Set-PSReadLineOption -ExtraPromptLineCount 1
+        Set-PSReadLineOption -ExtraPromptLineCount 2
     }
     $status = $global:pwsh_pBreak ? "|@s|enabled" : "|@w|disabled" #"
     ro "extra prompt linebreak $status"

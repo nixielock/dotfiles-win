@@ -5,7 +5,10 @@ function wqe {
     param (
         [Alias('i')]
         [ValidateSet("Regular","MSIX","ARP")]
-        [string[]] $Category = "Regular"
+        [string[]] $Category = "Regular",
+
+        [Alias('q')]
+        [switch] $UpdatesOnly
     )
 
     begin {
@@ -16,8 +19,15 @@ function wqe {
                 $Package
             )
 
-            $current = $pkg.InstalledVersion
+            $current = $pkg.InstalledVersion -replace '^> *', ''
             $latest = $pkg.AvailableVersions[0]
+            # Installed and Latest are version numbers straight from Get-WingetPackage
+            # Behind is set to one of the following:
+            #    0  -> package is up to date
+            #   -1  -> package is newer than the latest available
+            #    1  -> package has a new version available
+            #    2+ -> package is 2+ versions behind the latest available version
+            # $null -> unclear, but latest available version is numerically higher than installed version
             $vInfo = [PSCustomObject]@{
                 Installed = $current
                 Latest = $latest
@@ -91,6 +101,11 @@ function wqe {
                 }
                 $pkgInfo = version $pkg
 
+                if ($UpdatesOnly -and $pkgInfo.Behind -in @(0, -1)) {
+                    # skip up-to-date packages
+                    continue
+                }
+
                 $displayPackages.Add(([PSCustomObject]@{
                     Title   = $pkgTitle
                     Current = $pkgInfo.Installed
@@ -99,7 +114,13 @@ function wqe {
                 }))
             }
 
-            ro "displaying |@b|$($selectPackages.Count) |@|$text packages:"
+            $nPkg = $selectPackages.Count
+            if ($UpdatesOnly) {
+                $nDis = $displayPackages.Count
+                ro "displaying |@b|$nDis|@|/$nPkg |@|$text packages with available updates:"
+            } else {
+                ro "displaying |@b|$nPkg |@|$text packages:"
+            }
             $padName = ($displayPackages.Title | Measure-Object Length -Maximum).Maximum
             $padCurrent = ($displayPackages.Current | Measure-Object Length -Maximum).Maximum
             foreach ($pkg in $displayPackages) {
