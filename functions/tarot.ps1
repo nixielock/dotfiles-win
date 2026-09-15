@@ -62,7 +62,7 @@ function tarot {
         ro "  |@p|> " -n
         $input = (Read-Host).ToLower() -replace 'the ', ''
         $reversed = $input -match 'r(eversed?)?$'
-        $input = $input -replace ',? ?r(eversed?)?', ''
+        $input = $input -replace ',? ?r(eversed?)?$', ''
         if (-not $input) {
             wipe-line 1
             break

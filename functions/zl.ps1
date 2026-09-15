@@ -5,7 +5,7 @@
 $pwsh_zlCategories = @(
     [PSCustomObject]@{
         Name  = 'code'
-        Regex = "\.(md|(ht|x|ya|to)ml|css|json|ahk)"
+        Regex = "\.(md|(ht|x|ya|to)ml|cs[sv]|json|ahk|py)$"
         Color = 'white'
         Icon  = "`u{f121} "
     }
@@ -16,8 +16,14 @@ $pwsh_zlCategories = @(
     }
     [PSCustomObject]@{
         Name  = 'exe'
-        Regex = "\.exe"
+        Regex = "\.(exe|msix?)$"
+        Color = 'darkred'
+    }
+    [PSCustomObject]@{
+        Name  = 'doc'
+        Regex = "\.((doc|xls|ppt)x?|pdf|odt|rtf)$"
         Color = 'green'
+        Icon  = "`u{f0219}"
     }
     [PSCustomObject]@{
         Name  = 'file'
@@ -44,20 +50,25 @@ $pwsh_zlCategories = @(
     }
     [PSCustomObject]@{
         Name  = 'img'
-        Regex = "\.(png|jpe?g|gif)"
+        Regex = "\.(png|jpe?g|gif|bmp)$"
         Color = 'magenta'
         Icon  = "`u{f03e} "
     }
     [PSCustomObject]@{
+        Name  = 'bak'
+        Color = 'darkgray'
+        Icon  = "`u{f006f} "
+    }
+    [PSCustomObject]@{
         Name  = 'ps'
-        Regex = "\.ps.?1"
+        Regex = "\.ps.?1$"
         Color = 'blue'
         Icon  = "`u{e683} "
     }
     [PSCustomObject]@{
         Name  = 'zip'
-        Regex = "\.(zip|rar|7z)"
-        Color = 'yellow'
+        Regex = "\.(zip|[rt]ar|7z|gz)$"
+        Color = 'darkyellow'
         Icon  = "`u{f410} "
     }
 )
@@ -190,6 +201,9 @@ function zl {
             # .git items
             if ($name -match '\.git') {
                 $ctype = $ctype -replace 'h(file|dir)','g$1'
+            }
+            if ($name -match '\.(bak|old(\-\d+)?)(\.\w+)?$') {
+                $ctype = 'bak'
             }
 
             # > add item to list
