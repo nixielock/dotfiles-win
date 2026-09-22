@@ -44,6 +44,7 @@ $pwsh_ansi = @{
     'brcyan' = "`e[96m"
     'brwhite' = "`e[97m"
     'reset' = "`e[0m"
+    'auto' = "`e[39m"
 }
 $colorKeys = $pwsh_ansi.Keys -ne 'reset'
 foreach ($key in $colorKeys) {

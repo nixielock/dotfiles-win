@@ -19,6 +19,7 @@ if ($null -eq $ansi_reset) {
         'brcyan' = "$([char]0x1b)[96m"
         'brwhite' = "$([char]0x1b)[97m"
         'reset' = "$([char]0x1b)[0m"
+        'auto' = "$([char]0x1b)[39m"
     }
     $colorKeys = $pwsh_ansi.Keys -ne 'reset'
     foreach ($key in $colorKeys) {
@@ -51,6 +52,7 @@ $ro_list = @{
     brmagenta = @('h','hl','highlight','magenta')
     brcyan = @('p','prompt','cyan')
     brwhite = @('b','bright','white')
+    auto = @('a','auto','def','default')
 }
 
 $ro_keys = @{ '' = $ansi_reset }

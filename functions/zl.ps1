@@ -5,7 +5,7 @@
 $pwsh_zlCategories = @(
     [PSCustomObject]@{
         Name  = 'code'
-        Regex = "\.(md|(ht|x|ya|to)ml|cs[sv]|json|ahk|py)$"
+        Regex = "\.(md|(ht|x|ya|to)ml|cs[sv]|js(on)?|ahk|py)$"
         Color = 'white'
         Icon  = "`u{f121} "
     }

@@ -70,7 +70,7 @@ function todo {
         # draw todo list output
         if ($script:pwsh_todo) {
             $len = 0
-            foreach ($l in ($script:pwsh_todo -replace $ro_tag, '')) {
+            foreach ($l in ($script:pwsh_todo -replace "$ro_tag|`e\[[\d;]m", '')) {
                 if ($l.Length -gt $len) {
                     $len = $l.Length
                 }
