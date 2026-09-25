@@ -33,11 +33,11 @@ $pwsh_dzGlyphSets = @(
 )
 
 $pwsh_dzGlyphSetSelect = @(
-    '^[\dXH]$',
-    '^[\dAB]$',
-    '^[\dDE]$',
-    '^[\dTE]$',
-    '^[\dXE]$'
+    '^[\dXH]+$',
+    '^[\dAB]+$',
+    '^[\dDE]+$',
+    '^[\dTE]+$',
+    '^[\dXE]+$'
 )
 
 function cndz {
@@ -102,7 +102,7 @@ function cnzd {
 
         foreach ($set in 0..($pwsh_dzGlyphSetSelect.Count - 1)) {
             if (-not ($zParsed -notmatch $pwsh_dzGlyphSetSelect[$set])) {
-                $setUsed = $pwsh_zdGlyphSets[$set]
+                $setUsed = $pwsh_dzGlyphSets[$set]
                 break
             }
         }

@@ -3,6 +3,7 @@
 # set variables for prompt
 $global:pwsh_pGit = $false
 $global:pwsh_pBreak = $false
+$global:pwsh_pDemo = $false
 $script:pwsh_previousPath = ""
 $pwsh_pColor = ""
 $pwsh_pMode = ""
@@ -56,37 +57,39 @@ function prompt {
         [Console]::WriteLine()
     }
 
-    # write ISO date and vertical bar (and wraparound bar!)
-    $zDateTime = ztd -pad -dd '' -td ''
-    ro "|@dred|//|@d| 0z|@|$($zDateTime.Date)|@d|-|@|$($zDateTime.Time)|@dred| | " -n
+    if (-not $global:pwsh_pDemo) {
+        # write ISO date and vertical bar (and wraparound bar!)
+        $zDateTime = ztd -pad -dd '' -td ''
+        ro "|@dred|//|@d| 0z|@|$($zDateTime.Date)|@d|-|@|$($zDateTime.Time)|@dred| | " -n
 
-    # show entire filepath if just changed
-    $pwsh_currentPath = $PWD.Path
-    if ($pwsh_currentPath -ne $script:pwsh_previousPath) {
-        $script:pwsh_previousPath = $pwsh_currentPath
+        # show entire filepath if just changed
+        $pwsh_currentPath = $PWD.Path
+        if ($pwsh_currentPath -ne $script:pwsh_previousPath) {
+            $script:pwsh_previousPath = $pwsh_currentPath
 
-        $parsedPath = $pwsh_currentPath.Replace("$env:USERPROFILE","~")
-        ro "|@b|$parsedPath" -n
+            $parsedPath = $pwsh_currentPath.Replace("$env:USERPROFILE","~")
+            ro "|@b|$parsedPath" -n
 
-    # otherwise, show only the current folder
-    } else {
-        $endPath = $pwsh_currentPath.Replace("$env:USERPROFILE","~") -replace '.*\\([^\\]+)$', '$1'
-        if ($pwsh_currentPath.Contains($env:USERPROFILE)) {
-            $endPath = "|@dcyan|$endPath"
+        # otherwise, show only the current folder
+        } else {
+            $endPath = $pwsh_currentPath.Replace("$env:USERPROFILE","~") -replace '.*\\([^\\]+)$', '$1'
+            if ($pwsh_currentPath.Contains($env:USERPROFILE)) {
+                $endPath = "|@dcyan|$endPath"
+            }
+            ro $endPath -n
         }
-        ro $endPath -n
-    }
 
-    # show git output if inside a git repo
-    if ($pwsh_pGit) {
-        if ($toplevel = (git rev-parse --show-toplevel 2>$null)) {
-            $reponame = $toplevel -replace ('.*/','')
-            $repobranch = (git branch --show-current 2>$null)
+        # show git output if inside a git repo
+        if ($pwsh_pGit) {
+            if ($toplevel = (git rev-parse --show-toplevel 2>$null)) {
+                $reponame = $toplevel -replace ('.*/','')
+                $repobranch = (git branch --show-current 2>$null)
         
-            ro "|@p| | |@|$reponame/|@b|$repobranch" -n
+                ro "|@p| | |@|$reponame/|@b|$repobranch" -n
+            }
         }
+        [Console]::WriteLine()
     }
-    [Console]::WriteLine()
 
     # print second line
     ro "|@$pwsh_viModeColor|[$pwsh_viModeSection] " -n
