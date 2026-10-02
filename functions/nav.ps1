@@ -7,78 +7,82 @@ $pwsh_navFolder = "$env:USERPROFILE\.nav"
 function nav {
     [CmdletBinding()]
     param (
-        [parameter(Position=0, ValueFromPipeline)]
+        [parameter(Position = 0, ValueFromPipeline)]
         [Alias('m')]
         [string] $Marker = 0,
+
         [Alias('l')]
         [switch] $List
     )
 
+    # list .nav links and exit
     if ($List) {
+        $fileList = gci -path $pwsh_navFolder -force -ea Stop
         $outList = @()
-        (gci -path $pwsh_navFolder) |
-            ? { $_.Extension -eq ".nav" } |
-            % {
-                $c = (cat $_.FullName -to 2)
+        foreach ($file in $fileList) {
+            if ($file.Extension -eq '.nav') {
+                $c = (cat $file.FullName -to 2)
                 if ($c.Count -eq 1) {
                     $c = @($c)
                 }
                 $outList += [PSCustomObject]@{
-                    Marker  = $_.Name -replace '\.nav$',''
-                    Path    = "$($c[0])".Replace("$env:USERPROFILE\",'~\')
+                    Marker  = $file.BaseName
+                    Path    = $c[0] -replace [regex]::Escape("$env:USERPROFILE\"), '~\'
                     Comment = $c[1]
                 }
             }
-        $outList | Format-Table
-        return
+        }
+        return $outList
     }
 
-    $navPath = "$pwsh_navFolder\$Marker.nav"
-    $mText = " $Marker"
-
+    $navFile = "$pwsh_navFolder\$Marker.nav"
     try {
-        $lnav = (cat $navPath -to 2 2>$null)
+        $lnav = @() + (cat $navFile -to 2 -ea Stop)
         
-        switch ($lnav.Count -eq 1) {
-            $true { $lnav = @($lnav); wr "nav " -n; wr "$Marker" -f green }
-            $false { wr "nav $Marker`: "; wr "$($lnav[1])" -f green }
+        if ($lnav[1]) {
+            ro "nav |@b|${Marker}|@|: |@s|$($lnav[1])"
+        } else {
+            ro "nav |@s|$Marker"
         }
         zd $lnav[0]
 
     } catch {
         wr "nav failed, marker $Marker.nav not set" -f red
+        throw
     }
 }
 
 function setnav {
     [CmdletBinding()]
     param (
-        [parameter(Position=0, ValueFromPipeline)]
+        [parameter(Position = 0, ValueFromPipeline)]
         [Alias('m')]
         [string] $Marker = 0,
-        [parameter(Position=1,ValueFromPipeline)]
+
+        [parameter(Position = 1, ValueFromPipelineByPropertyName)]
         [Alias('c')]
-        [string] $Comment
+        [string] $Comment,
+
+        [parameter(ValueFromPipelineByPropertyName)]
+        [string] $Target = $PWD.Path
     )
 
-    $navPath = "$pwsh_navFolder\$Marker.nav"
-
+    $navFile = "$pwsh_navFolder\$Marker.nav"
     try {
-        if (!(Test-Path $navPath)) {
-            ni $navPath | out-null
-            wr "created $navPath" -f yellow
+        if (-not (Test-Path $navFile)) {
+            [void] (ni $navFile)
+            wr "created $navFile" -f yellow
         }
 
-        clc $navPath
-        ac $navPath (gl)
-        if ($Comment -match '\S') {
+        Set-Content $navFile -Value $Target
+        if ($Comment) {
             $Comment -replace '\n',' '
-            ac $navPath $Comment
+            Add-Content $navFile -Value $Comment
         }
 
-        wr "nav set!" -f green
+        ro "|@s|nav set!"
     } catch {
-        wr "setnav failed" -f e
+        ro "|@e|setnav failed"
         throw
     }
 }

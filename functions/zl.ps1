@@ -147,7 +147,7 @@ function zl {
 
     process {
         # -- setup
-        $pathItem = (gi $Path -ea Stop)
+        $pathItem = (gi $Path -force -ea Stop)
         if (-not $pathItem.PSIsContainer) {
             throw "$($pathItem.Name) is not a directory"
         }
